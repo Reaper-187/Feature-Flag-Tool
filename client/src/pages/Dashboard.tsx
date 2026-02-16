@@ -80,6 +80,23 @@ export const Dashboard = () => {
     setFlagData(filtered);
   };
 
+  const handleSortChange = (sortType: string) => {
+    if (sortType === "") return setFlagData(mockData);
+
+    const sortedData = [...mockData].sort((a, b) =>
+      sortType === "A-Z"
+        ? a.flagName.localeCompare(b.flagName)
+        : sortType === "Z-A"
+          ? b.flagName.localeCompare(a.flagName)
+          : sortType === "Date up"
+            ? b.createdDate - a.createdDate
+            : sortType === "Date down"
+              ? a.createdDate - b.createdDate
+              : 0,
+    );
+
+    setFlagData(sortedData);
+  };
   return (
     <>
       <div className="flex justify-between items-center p-3">
@@ -124,16 +141,26 @@ export const Dashboard = () => {
             <AppDropdown
               triggerIcon={ArrowDownUp}
               items={[
-                { label: "[A-Z]" /*onClick: () => handleSortAZ()*/ },
+                {
+                  label: "Reset Sort",
+                  onClick: () => handleSortChange(""),
+                },
+                {
+                  label: "[A-Z]",
+                  onClick: () => handleSortChange("A-Z"),
+                },
                 {
                   label: "[Z-A]",
-                  /*onClick: () => handleSortZA(),*/
+                  onClick: () => handleSortChange("Z-A"),
                   separator: true,
                 },
-                { label: "Date up" /*onClick: () => handleDateUp()*/ },
+                {
+                  label: "Date up",
+                  onClick: () => handleSortChange("Date up"),
+                },
                 {
                   label: "Date down",
-                  /*onClick: () => handleDateDown(),*/
+                  onClick: () => handleSortChange("Date down"),
                   separator: true,
                 },
               ]}
