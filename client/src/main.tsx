@@ -10,6 +10,7 @@ import "./index.css";
 import { Toaster } from "sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Dashboard } from "./pages/Dashboard.tsx";
+import { NewFlag } from "./pages/NewFlag.tsx";
 
 const queryClient = new QueryClient();
 
@@ -78,6 +79,7 @@ const router = createBrowserRouter([
     children: [
       { path: "/", element: <Navigate to="/dashboard" replace /> },
       { path: "dashboard", element: <Dashboard /> },
+      { path: "create-new-feature-flag", element: <NewFlag /> },
     ],
   },
 ]);

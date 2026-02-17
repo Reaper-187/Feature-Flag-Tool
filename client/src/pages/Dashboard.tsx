@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ArrowDownUp, ListFilter } from "lucide-react";
 import { useState, type ChangeEvent } from "react";
+import { Link } from "react-router";
 
 interface data {
   flagName: string;
@@ -98,7 +99,7 @@ export const Dashboard = () => {
     setFlagData(sortedData);
   };
   return (
-    <>
+    <div className="relative">
       <div className="flex justify-between items-center p-3">
         <h1 className="font-bold text-sm md:text-xl">Flags</h1>
         <div className="flex gap-10 items-center text-sm">
@@ -166,7 +167,9 @@ export const Dashboard = () => {
               ]}
             />
           </div>
-          <Button>+ Create flag</Button>
+          <Link to={"/create-new-feature-flag"}>
+            <Button>+ Create flag</Button>
+          </Link>
         </div>
       </div>
 
@@ -196,6 +199,6 @@ export const Dashboard = () => {
       {flagData.map((flag, index) => (
         <Flag key={index} data={flag} />
       ))}
-    </>
+    </div>
   );
 };
