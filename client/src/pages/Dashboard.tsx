@@ -99,7 +99,7 @@ export const Dashboard = () => {
     setFlagData(sortedData);
   };
   return (
-    <div className="relative">
+    <>
       <div className="flex justify-between items-center p-3">
         <h1 className="font-bold text-sm md:text-xl">Flags</h1>
         <div className="flex gap-10 items-center text-sm">
@@ -199,6 +199,6 @@ export const Dashboard = () => {
       {flagData.map((flag, index) => (
         <Flag key={index} data={flag} />
       ))}
-    </div>
+    </>
   );
 };

@@ -16,20 +16,29 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState, type ChangeEvent } from "react";
 import { Link } from "react-router";
 import { ChartNetwork, RefreshCcw, TestTubeDiagonal } from "lucide-react";
+import { Slider } from "@/components/ui/slider";
 
 const formSchema = z.object({
   flagName: z.string(),
   flagKeyName: z.string(),
   description: z.string().optional(),
-  tags: z.string().optional(),
-  flagVari: z.string(),
   flagType: z.string(),
+  flagRollout: z.number().min(0).max(100).array(),
 });
 
 type FormOfNewFlag = z.infer<typeof formSchema>;
 
-type FlagVariations = "Boolean" | "String" | "Number" | "JSON";
 type FlagType = "Update" | "Analytics" | "Test";
+
+const flagTypes: {
+  value: string;
+  label: FlagType;
+  icon: React.ElementType;
+}[] = [
+  { value: "update", label: "Update", icon: RefreshCcw },
+  { value: "analytics", label: "Analytics", icon: ChartNetwork },
+  { value: "test", label: "Test", icon: TestTubeDiagonal },
+];
 
 export const NewFlag = () => {
   const {
@@ -42,9 +51,11 @@ export const NewFlag = () => {
   } = useForm<FormOfNewFlag>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      flagVari: "boolean",
+      flagType: "update",
+      flagRollout: [0],
     },
   });
+
   const [isManualKey, setIsManualKey] = useState(false);
   const flagName = watch("flagName");
 
@@ -59,26 +70,10 @@ export const NewFlag = () => {
     setIsManualKey(true);
     setValue("flagKeyName", e.currentTarget.value.trim());
   };
+
   const handleNewFlag = (data: FormOfNewFlag) => {
     console.log(data);
   };
-
-  const flagVariations: { value: string; label: FlagVariations }[] = [
-    { value: "boolean", label: "Boolean" },
-    { value: "string", label: "String" },
-    { value: "number", label: "Number" },
-    { value: "json", label: "JSON" },
-  ];
-
-  const flagTypes: {
-    value: string;
-    label: FlagType;
-    icon: React.ElementType;
-  }[] = [
-    { value: "update", label: "Update", icon: RefreshCcw },
-    { value: "analytics", label: "Analytics", icon: ChartNetwork },
-    { value: "test", label: "Test", icon: TestTubeDiagonal },
-  ];
 
   return (
     <form className="p-5" onSubmit={handleSubmit(handleNewFlag)}>
@@ -89,6 +84,7 @@ export const NewFlag = () => {
         A feature flag lets you controle who can see particular feature in your
         app.
       </h3>
+
       <div className="space-y-3">
         <div className="space-y-2">
           <Label className="text-xs md:text-lg">Name</Label>
@@ -101,6 +97,7 @@ export const NewFlag = () => {
             A human-friendly name for your feature.
           </p>
         </div>
+
         <div className="space-y-2">
           <Label className="text-xs md:text-lg">Key</Label>
           <Input {...register("flagKeyName")} onChange={handleKeyChange} />
@@ -132,78 +129,49 @@ export const NewFlag = () => {
         </div>
 
         <div className="space-y-2">
-          <Label className="text-xs md:text-lg">
-            Tags <span className="text-xs text-gray-400">(optional)</span>
-          </Label>
-          <Input {...register("tags")} />
-          {errors.tags && (
-            <p className="text-sm text-red-500">{errors.tags.message}</p>
-          )}
-        </div>
-        <div className="space-y-2">
-          <Label className="text-xs md:text-lg">Flag variations</Label>
-          <Controller
-            control={control}
-            name="flagVari"
-            render={({ field }) => (
-              <>
-                <Select
-                  defaultValue="boolean"
-                  value={field.value || "boolean"}
-                  onValueChange={field.onChange}
-                >
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="variations" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      {flagVariations.map((variation) => (
-                        <SelectItem
-                          key={variation.value}
-                          value={variation.value}
-                        >
-                          {variation.label}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </>
-            )}
-          />
-          <p className="text-sm text-gray-400">
-            This controls the evaluation return type of your flag in your Code.
-          </p>
-        </div>
-        <div className="space-y-2">
           <Label className="text-xs md:text-lg">Type</Label>
           <Controller
             control={control}
             name="flagType"
             render={({ field }) => (
-              <>
-                <Select
-                  defaultValue="update"
-                  value={field.value || "update"}
+              <Select onValueChange={field.onChange} value={field.value}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Select type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {flagTypes.map((type) => (
+                      <SelectItem key={type.value} value={type.value}>
+                        <div className="flex items-center gap-2">
+                          {type.label}
+                          <type.icon size={16} />
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            )}
+          />
+        </div>
+
+        <div className="space-y-4">
+          <Label className="text-xs md:text-lg">Rollout</Label>
+          <Controller
+            control={control}
+            name="flagRollout"
+            render={({ field }) => (
+              <div className="flex gap-3">
+                <Slider
+                  className="w-1/5"
+                  value={field.value}
                   onValueChange={field.onChange}
-                >
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="variations" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      {flagTypes.map((type) => (
-                        <SelectItem key={type.value} value={type.value}>
-                          <div className="flex items-center gap-2">
-                            {type.label}
-                            <type.icon size={16} />
-                          </div>
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </>
+                  min={0}
+                  max={100}
+                  step={25}
+                />
+                <span>{field.value}%</span>
+              </div>
             )}
           />
         </div>
