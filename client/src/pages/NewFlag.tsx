@@ -163,7 +163,7 @@ export const NewFlag = () => {
             render={({ field }) => (
               <div className="flex gap-3">
                 <Slider
-                  className="w-1/5"
+                  className="w-2/5"
                   value={field.value}
                   onValueChange={field.onChange}
                   min={0}
@@ -180,7 +180,7 @@ export const NewFlag = () => {
       <Separator className="my-5"></Separator>
       <div className="flex justify-between">
         <Link to={"/dashboard"}>
-          <Button className="bg-red-400 cursor-pointer">Cancle</Button>
+          <Button className="bg-red-400 cursor-pointer">Cancel</Button>
         </Link>
         <Button type="submit" className="cursor-pointer">
           Create Flag
