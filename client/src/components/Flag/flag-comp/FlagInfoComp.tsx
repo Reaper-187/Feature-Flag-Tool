@@ -2,6 +2,7 @@ import * as Icons from "lucide-react";
 import { AppDropdown } from "@/components/DropdownComp/Dropdown";
 
 interface FlagInfo {
+  flagId: string;
   flagName: string;
   createdBy: string;
   createdDate: number;
@@ -9,6 +10,7 @@ interface FlagInfo {
 }
 
 export const FlagInfoComp = ({
+  flagId,
   flagName,
   createdBy,
   createdDate,
@@ -17,7 +19,7 @@ export const FlagInfoComp = ({
   const IconComponent = (Icons as any)[type] || Icons.HelpCircle;
 
   return (
-    <div>
+    <div key={flagId}>
       <h3 className="font-bold">{flagName}</h3>
       <div className="grid grid-cols-[120px_100px_80px_auto] gap-3 items-center text-xs text-gray-400">
         <p className="truncate">{createdBy}</p>

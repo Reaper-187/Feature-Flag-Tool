@@ -6,7 +6,8 @@ import { ArrowDownUp, ListFilter } from "lucide-react";
 import { useState, type ChangeEvent } from "react";
 import { Link } from "react-router";
 
-interface data {
+interface FlagData {
+  flagId: string;
   flagName: string;
   createdBy: string;
   createdDate: number;
@@ -15,8 +16,9 @@ interface data {
   stageSwtich: boolean;
   prodSwtich: boolean;
 }
-const mockData: data[] = [
+const mockData: FlagData[] = [
   {
+    flagId: "1",
     flagName: "Test API",
     createdBy: "Sassori",
     createdDate: Date.now(),
@@ -26,6 +28,7 @@ const mockData: data[] = [
     prodSwtich: true,
   },
   {
+    flagId: "2",
     flagName: "Bug Fix Update",
     createdBy: "Abdulkader Cheikhkamis",
     createdDate: Date.now(),
@@ -35,6 +38,7 @@ const mockData: data[] = [
     prodSwtich: false,
   },
   {
+    flagId: "3",
     flagName: "New Feature",
     createdBy: "Sassori123123",
     createdDate: Date.now(),
@@ -44,6 +48,7 @@ const mockData: data[] = [
     prodSwtich: true,
   },
   {
+    flagId: "4",
     flagName: "Name der Flag1212",
     createdBy: "Sassori123123",
     createdDate: Date.now(),
@@ -56,6 +61,7 @@ const mockData: data[] = [
 
 export const Dashboard = () => {
   const [flagData, setFlagData] = useState(mockData);
+  const [editableFlags, setEditableFlags] = useState<FlagData[]>([]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     let searchFor = e.currentTarget.value.toLowerCase();
@@ -72,7 +78,7 @@ export const Dashboard = () => {
 
     const filtered = mockData.filter((flag) => {
       if (switchFields.includes(filterType as any)) {
-        return flag[filterType as keyof data] === true;
+        return flag[filterType as keyof FlagData] === true;
       } else {
         return flag.type === filterType;
       }
@@ -98,6 +104,20 @@ export const Dashboard = () => {
 
     setFlagData(sortedData);
   };
+
+  const handleToggleSwitch = (
+    flagIdForChange: string,
+    fieldSwitch: "devSwtich" | "stageSwtich" | "prodSwtich",
+  ) => {
+    setFlagData((prevFlags) =>
+      prevFlags.map((flag) =>
+        flag.flagId === flagIdForChange
+          ? { ...flag, [fieldSwitch]: !flag[fieldSwitch] }
+          : flag,
+      ),
+    );
+  };
+
   return (
     <>
       <div className="flex justify-between items-center p-3">
@@ -197,8 +217,9 @@ export const Dashboard = () => {
       </div>
 
       {flagData.map((flag, index) => (
-        <Flag key={index} data={flag} />
+        <Flag key={index} data={flag} switchToggle={handleToggleSwitch} />
       ))}
+      <Button className="hidden">Save changes</Button>
     </>
   );
 };
