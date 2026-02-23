@@ -1,4 +1,5 @@
 import { AppDropdown } from "@/components/DropdownComp/Dropdown";
+import { EditAlert } from "@/components/edit-alert/EditAlert";
 import { Flag } from "@/components/Flag/Flag";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,7 +7,7 @@ import { ArrowDownUp, ListFilter } from "lucide-react";
 import { useState, type ChangeEvent } from "react";
 import { Link } from "react-router";
 
-interface FlagData {
+export interface FlagData {
   flagId: string;
   flagName: string;
   createdBy: string;
@@ -120,6 +121,16 @@ export const Dashboard = () => {
 
   const isDirty =
     JSON.stringify(originalFlags) !== JSON.stringify(editableFlags);
+
+  const [showEditAlert, setShowEditAlert] = useState(false);
+  const [selectedFlag, setSelectedFlag] = useState<FlagData | null>(null);
+
+  const handleOpenEdit = (flagId: string) => {
+    const flag = originalFlags.find((flag) => flag.flagId === flagId);
+    setShowEditAlert(true);
+    setSelectedFlag(flag ?? null);
+  };
+
   return (
     <>
       <div className="flex justify-between items-center p-3">
@@ -219,9 +230,19 @@ export const Dashboard = () => {
       </div>
 
       {editableFlags.map((flag) => (
-        <Flag key={flag.flagId} data={flag} switchToggle={handleToggleSwitch} />
+        <Flag
+          key={flag.flagId}
+          data={flag}
+          switchToggle={handleToggleSwitch}
+          editAlert={handleOpenEdit}
+        />
       ))}
       <Button className={isDirty ? `block` : `hidden`}>Save changes</Button>
+      <EditAlert
+        showEditAlert={showEditAlert}
+        closeAlert={setShowEditAlert}
+        editFlagData={selectedFlag}
+      />
     </>
   );
 };

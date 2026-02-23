@@ -7,6 +7,7 @@ interface FlagInfo {
   createdBy: string;
   createdDate: number;
   type: string;
+  openEditAlert: (flagId: string) => void;
 }
 
 export const FlagInfoComp = ({
@@ -15,6 +16,7 @@ export const FlagInfoComp = ({
   createdBy,
   createdDate,
   type,
+  openEditAlert,
 }: FlagInfo) => {
   const IconComponent = (Icons as any)[type] || Icons.HelpCircle;
 
@@ -37,7 +39,7 @@ export const FlagInfoComp = ({
             },
             {
               label: "Edit",
-              /*onClick: () => handleEdit(),*/
+              onClick: () => openEditAlert(flagId),
               separator: true,
             },
             {

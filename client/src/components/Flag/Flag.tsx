@@ -17,9 +17,10 @@ interface FlagProps {
     flagId: string,
     field: "devSwtich" | "stageSwtich" | "prodSwtich",
   ) => void;
+  editAlert: (flagId: string) => void;
 }
 
-export const Flag = ({ data, switchToggle }: FlagProps) => {
+export const Flag = ({ data, switchToggle, editAlert }: FlagProps) => {
   return (
     <>
       <div>
@@ -31,6 +32,7 @@ export const Flag = ({ data, switchToggle }: FlagProps) => {
               createdBy={data.createdBy}
               createdDate={data.createdDate}
               type={data.type}
+              openEditAlert={editAlert}
             />
             <div className="flex gap-2 w-1/2 ">
               <div className="w-full flex items-center p-1 text-xs justify-between">
