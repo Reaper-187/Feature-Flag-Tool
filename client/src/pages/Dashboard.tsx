@@ -60,19 +60,19 @@ const mockData: FlagData[] = [
 ];
 
 export const Dashboard = () => {
-  const [flagData, setFlagData] = useState(mockData);
-  const [editableFlags, setEditableFlags] = useState<FlagData[]>([]);
+  const [originalFlags, setOriginalFlags] = useState<FlagData[]>(mockData);
+  const [editableFlags, setEditableFlags] = useState<FlagData[]>(mockData);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     let searchFor = e.currentTarget.value.toLowerCase();
     const res = mockData.filter((flag) =>
       flag.flagName.toLowerCase().match(searchFor),
     );
-    return setFlagData(res);
+    return setOriginalFlags(res);
   };
 
   const handleTypeFilter = (filterType: string) => {
-    if (filterType === "") return setFlagData(mockData);
+    if (filterType === "") return setOriginalFlags(mockData);
 
     const switchFields = ["devSwtich", "stageSwtich", "prodSwtich"] as const;
 
@@ -84,11 +84,11 @@ export const Dashboard = () => {
       }
     });
 
-    setFlagData(filtered);
+    setOriginalFlags(filtered);
   };
 
   const handleSortChange = (sortType: string) => {
-    if (sortType === "") return setFlagData(mockData);
+    if (sortType === "") return setOriginalFlags(mockData);
 
     const sortedData = [...mockData].sort((a, b) =>
       sortType === "A-Z"
@@ -102,14 +102,14 @@ export const Dashboard = () => {
               : 0,
     );
 
-    setFlagData(sortedData);
+    setOriginalFlags(sortedData);
   };
 
   const handleToggleSwitch = (
     flagIdForChange: string,
     fieldSwitch: "devSwtich" | "stageSwtich" | "prodSwtich",
   ) => {
-    setFlagData((prevFlags) =>
+    setEditableFlags((prevFlags) =>
       prevFlags.map((flag) =>
         flag.flagId === flagIdForChange
           ? { ...flag, [fieldSwitch]: !flag[fieldSwitch] }
@@ -118,6 +118,8 @@ export const Dashboard = () => {
     );
   };
 
+  const isDirty =
+    JSON.stringify(originalFlags) !== JSON.stringify(editableFlags);
   return (
     <>
       <div className="flex justify-between items-center p-3">
@@ -216,10 +218,10 @@ export const Dashboard = () => {
         </div>
       </div>
 
-      {flagData.map((flag, index) => (
-        <Flag key={index} data={flag} switchToggle={handleToggleSwitch} />
+      {editableFlags.map((flag) => (
+        <Flag key={flag.flagId} data={flag} switchToggle={handleToggleSwitch} />
       ))}
-      <Button className="hidden">Save changes</Button>
+      <Button className={isDirty ? `block` : `hidden`}>Save changes</Button>
     </>
   );
 };
