@@ -1,22 +1,13 @@
 import { AppDropdown } from "@/components/DropdownComp/Dropdown";
-import { EditAlert } from "@/components/edit-alert/EditAlert";
+import { EditDialog } from "@/components/edit-dialog/EditDialog";
 import { Flag } from "@/components/Flag/Flag";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ArrowDownUp, ListFilter } from "lucide-react";
 import { useState, type ChangeEvent } from "react";
 import { Link } from "react-router";
+import type { FlagData } from "@/types/types";
 
-export interface FlagData {
-  flagId: string;
-  flagName: string;
-  createdBy: string;
-  createdDate: number;
-  type: string;
-  devSwtich: boolean;
-  stageSwtich: boolean;
-  prodSwtich: boolean;
-}
 const mockData: FlagData[] = [
   {
     flagId: "1",
@@ -238,7 +229,7 @@ export const Dashboard = () => {
         />
       ))}
       <Button className={isDirty ? `block` : `hidden`}>Save changes</Button>
-      <EditAlert
+      <EditDialog
         showEditAlert={showEditAlert}
         closeAlert={setShowEditAlert}
         editFlagData={selectedFlag}
