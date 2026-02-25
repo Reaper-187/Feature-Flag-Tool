@@ -1,11 +1,4 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-} from "../ui/dialog";
-import { Button } from "../ui/button";
-import { Separator } from "../ui/separator";
+import { Dialog, DialogContent, DialogTitle } from "../ui/dialog";
 import type { FlagData, FormOfNewFlag } from "@/types/types";
 import { FlagForm } from "../Flag-Form/FlagForm";
 
@@ -13,42 +6,36 @@ interface AlertProps {
   showEditAlert: boolean;
   closeAlert: (value: boolean) => void;
   editFlagData: FlagData | null;
+  editSubmit: (data: FormOfNewFlag) => void;
 }
 
 export const EditDialog = ({
   showEditAlert,
   closeAlert,
   editFlagData,
+  editSubmit,
 }: AlertProps) => {
   if (!editFlagData) return null;
 
-  const handleEditFlag = (data: FormOfNewFlag) => {
-    // später:
-    // 1. API call
-    // 2. redirect
-    // 3. toast
-    console.log("Edit:", data);
+  const mappedInitialValues: FormOfNewFlag = {
+    flagName: editFlagData.flagName,
+    flagKeyName: editFlagData.flagKeyName,
+    description: editFlagData.description,
+    flagRollout: [editFlagData.flagRollout],
+    devSwitch: editFlagData.devSwitch,
+    stageSwitch: editFlagData.stageSwitch,
+    prodSwitch: editFlagData.prodSwitch,
   };
 
   return (
     <Dialog open={showEditAlert} onOpenChange={closeAlert}>
+      <DialogTitle hidden></DialogTitle>
       <DialogContent>
-        <form>
-          <DialogHeader></DialogHeader>
-          <FlagForm mode="edit" onSubmit={handleEditFlag} />
-          <Separator className="my-5"></Separator>
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => closeAlert(false)}
-            >
-              Cancel
-            </Button>
-
-            <Button type="submit">Save Changes</Button>
-          </DialogFooter>
-        </form>
+        <FlagForm
+          mode="edit"
+          onSubmit={editSubmit}
+          initialValues={mappedInitialValues}
+        />
       </DialogContent>
     </Dialog>
   );

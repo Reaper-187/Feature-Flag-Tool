@@ -6,48 +6,60 @@ import { Input } from "@/components/ui/input";
 import { ArrowDownUp, ListFilter } from "lucide-react";
 import { useState, type ChangeEvent } from "react";
 import { Link } from "react-router";
-import type { FlagData } from "@/types/types";
+import type { FlagData, FormOfNewFlag } from "@/types/types";
 
 const mockData: FlagData[] = [
   {
-    flagId: "1",
+    flagId: "11234ß012340ß781ß3948ß",
     flagName: "Test API",
+    flagKeyName: "Test_API",
     createdBy: "Sassori",
     createdDate: Date.now(),
-    type: "RefreshCcw",
-    devSwtich: true,
-    stageSwtich: false,
-    prodSwtich: true,
+    flagRollout: 25,
+    description: "description",
+
+    devSwitch: true,
+    stageSwitch: false,
+    prodSwitch: true,
   },
   {
-    flagId: "2",
+    flagId: "2834u5ß02734ß0857ß2",
     flagName: "Bug Fix Update",
+    flagKeyName: "Bug_Fix_Update",
     createdBy: "Abdulkader Cheikhkamis",
     createdDate: Date.now(),
-    type: "RefreshCcw",
-    devSwtich: true,
-    stageSwtich: true,
-    prodSwtich: false,
+    flagRollout: 25,
+    description: "description",
+
+    devSwitch: true,
+    stageSwitch: true,
+    prodSwitch: false,
   },
   {
-    flagId: "3",
+    flagId: "3293485ß2345098",
     flagName: "New Feature",
+    flagKeyName: "New_Feature",
     createdBy: "Sassori123123",
     createdDate: Date.now(),
-    type: "ChartNetwork",
-    devSwtich: false,
-    stageSwtich: true,
-    prodSwtich: true,
+    flagRollout: 25,
+    description: "description",
+
+    devSwitch: false,
+    stageSwitch: true,
+    prodSwitch: true,
   },
   {
-    flagId: "4",
+    flagId: "42039457ß0374ß95872",
     flagName: "Name der Flag1212",
+    flagKeyName: "Name_der_Flag1212",
     createdBy: "Sassori123123",
     createdDate: Date.now(),
-    type: "TestTubeDiagonal",
-    devSwtich: true,
-    stageSwtich: false,
-    prodSwtich: false,
+    flagRollout: 25,
+    description: "description",
+
+    devSwitch: true,
+    stageSwitch: false,
+    prodSwitch: false,
   },
 ];
 
@@ -71,8 +83,6 @@ export const Dashboard = () => {
     const filtered = mockData.filter((flag) => {
       if (switchFields.includes(filterType as any)) {
         return flag[filterType as keyof FlagData] === true;
-      } else {
-        return flag.type === filterType;
       }
     });
 
@@ -99,7 +109,7 @@ export const Dashboard = () => {
 
   const handleToggleSwitch = (
     flagIdForChange: string,
-    fieldSwitch: "devSwtich" | "stageSwtich" | "prodSwtich",
+    fieldSwitch: "devSwitch" | "stageSwitch" | "prodSwitch",
   ) => {
     setEditableFlags((prevFlags) =>
       prevFlags.map((flag) =>
@@ -122,6 +132,15 @@ export const Dashboard = () => {
     setSelectedFlag(flag ?? null);
   };
 
+  const handleEditFlag = (data: FormOfNewFlag) => {
+    if (!selectedFlag) return;
+    // später:
+    // 1. API call
+    // 2. redirect
+    // 3. toast
+    console.log("Edit:", selectedFlag.flagId, data);
+  };
+
   return (
     <>
       <div className="flex justify-between items-center p-3">
@@ -134,19 +153,6 @@ export const Dashboard = () => {
                 {
                   label: "Reset Filter",
                   onClick: () => handleTypeFilter(""),
-                },
-                {
-                  label: "Update",
-                  onClick: () => handleTypeFilter("RefreshCcw"),
-                },
-                {
-                  label: "Analytics",
-                  onClick: () => handleTypeFilter("ChartNetwork"),
-                },
-                {
-                  label: "Tests",
-                  onClick: () => handleTypeFilter("TestTubeDiagonal"),
-                  separator: true,
                 },
                 {
                   label: "Active Development",
@@ -233,6 +239,7 @@ export const Dashboard = () => {
         showEditAlert={showEditAlert}
         closeAlert={setShowEditAlert}
         editFlagData={selectedFlag}
+        editSubmit={handleEditFlag}
       />
     </>
   );

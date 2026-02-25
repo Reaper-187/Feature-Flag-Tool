@@ -1,20 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import { Separator } from "@/components/ui/separator";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState, type ChangeEvent } from "react";
 import { Slider } from "@/components/ui/slider";
-import { flagTypes, formSchema, type FormOfNewFlag } from "@/types/types";
+import { formSchema, type FormOfNewFlag } from "@/types/types";
+import { Switch } from "../ui/switch";
 
 interface FlagFormProps {
   mode: "create" | "edit";
@@ -36,15 +30,19 @@ export const FlagForm = ({ mode, initialValues, onSubmit }: FlagFormProps) => {
     defaultValues:
       mode === "create"
         ? {
-            flagType: "update",
             flagRollout: [0],
+            devSwitch: false,
+            stageSwitch: false,
+            prodSwitch: false,
           }
         : {
-            flagType: initialValues?.flagType ?? "update",
             flagRollout: initialValues?.flagRollout ?? [0],
             flagName: initialValues?.flagName ?? "",
             flagKeyName: initialValues?.flagKeyName ?? "",
             description: initialValues?.description ?? "",
+            devSwitch: initialValues?.devSwitch ?? false,
+            stageSwitch: initialValues?.stageSwitch ?? false,
+            prodSwitch: initialValues?.prodSwitch ?? false,
           },
   });
 
@@ -130,33 +128,6 @@ export const FlagForm = ({ mode, initialValues, onSubmit }: FlagFormProps) => {
           )}
         </div>
 
-        <div className="space-y-2">
-          <Label className="text-xs md:text-lg">Type</Label>
-          <Controller
-            control={control}
-            name="flagType"
-            render={({ field }) => (
-              <Select onValueChange={field.onChange} value={field.value}>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Select type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    {flagTypes.map((type) => (
-                      <SelectItem key={type.value} value={type.value}>
-                        <div className="flex items-center gap-2">
-                          {type.label}
-                          <type.icon size={16} />
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            )}
-          />
-        </div>
-
         <div className="space-y-4">
           <Label className="text-xs md:text-lg">Rollout</Label>
           <Controller
@@ -176,6 +147,49 @@ export const FlagForm = ({ mode, initialValues, onSubmit }: FlagFormProps) => {
               </div>
             )}
           />
+        </div>
+
+        <Separator className="my-5"></Separator>
+        <div className="flex gap-2 w-1/2 ">
+          <div className="w-full flex items-center p-1 text-md justify-between">
+            <p className="text-black">Development</p>
+            <Controller
+              control={control}
+              name="devSwitch"
+              render={({ field }) => (
+                <Switch
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              )}
+            />
+          </div>
+          <div className="w-full flex items-center p-1 text-md justify-between">
+            <p className="text-black">Staging</p>
+            <Controller
+              control={control}
+              name="stageSwitch"
+              render={({ field }) => (
+                <Switch
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              )}
+            />
+          </div>
+          <div className="w-full flex items-center p-1 text-md justify-between">
+            <p className="text-black">Production</p>
+            <Controller
+              control={control}
+              name="prodSwitch"
+              render={({ field }) => (
+                <Switch
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              )}
+            />
+          </div>
         </div>
       </div>
 

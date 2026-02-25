@@ -8,14 +8,16 @@ interface FlagProps {
     flagName: string;
     createdBy: string;
     createdDate: number;
-    type: string;
-    devSwtich: boolean;
-    stageSwtich: boolean;
-    prodSwtich: boolean;
+    flagKeyName: string;
+    flagRollout: number;
+    description: string;
+    devSwitch: boolean;
+    stageSwitch: boolean;
+    prodSwitch: boolean;
   };
   switchToggle: (
     flagId: string,
-    field: "devSwtich" | "stageSwtich" | "prodSwtich",
+    field: "devSwitch" | "stageSwitch" | "prodSwitch",
   ) => void;
   editAlert: (flagId: string) => void;
 }
@@ -31,32 +33,31 @@ export const Flag = ({ data, switchToggle, editAlert }: FlagProps) => {
               flagName={data.flagName}
               createdBy={data.createdBy}
               createdDate={data.createdDate}
-              type={data.type}
               openEditAlert={editAlert}
             />
             <div className="flex gap-2 w-1/2 ">
               <div className="w-full flex items-center p-1 text-xs justify-between">
                 <p className="text-gray-400">Evaluated X days ago</p>
                 <Switch
-                  checked={data.devSwtich}
-                  onCheckedChange={() => switchToggle(data.flagId, "devSwtich")}
+                  checked={data.devSwitch}
+                  onCheckedChange={() => switchToggle(data.flagId, "devSwitch")}
                 />
               </div>
               <div className="w-full flex items-center p-1 text-xs justify-between">
                 <p className="text-gray-400">Evaluated X days ago</p>
                 <Switch
-                  checked={data.stageSwtich}
+                  checked={data.stageSwitch}
                   onCheckedChange={() =>
-                    switchToggle(data.flagId, "stageSwtich")
+                    switchToggle(data.flagId, "stageSwitch")
                   }
                 />
               </div>
               <div className="w-full flex items-center p-1 text-xs justify-between">
                 <p className="text-gray-400">Evaluated X days ago</p>
                 <Switch
-                  checked={data.prodSwtich}
+                  checked={data.prodSwitch}
                   onCheckedChange={() =>
-                    switchToggle(data.flagId, "prodSwtich")
+                    switchToggle(data.flagId, "prodSwitch")
                   }
                 />
               </div>
