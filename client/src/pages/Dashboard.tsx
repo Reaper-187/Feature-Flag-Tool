@@ -7,6 +7,7 @@ import { ArrowDownUp, ListFilter } from "lucide-react";
 import { useState, type ChangeEvent } from "react";
 import { Link } from "react-router";
 import type { FlagData, FormOfNewFlag } from "@/types/types";
+import { getChangedFlags } from "@/flag-utilitys/getChangedFlag";
 
 const mockData: FlagData[] = [
   {
@@ -67,6 +68,9 @@ export const Dashboard = () => {
   const [originalFlags, setOriginalFlags] = useState<FlagData[]>(mockData);
   const [editableFlags, setEditableFlags] = useState<FlagData[]>(mockData);
 
+  const [showEditAlert, setShowEditAlert] = useState(false);
+  const [selectedFlag, setSelectedFlag] = useState<FlagData | null>(null);
+
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     let searchFor = e.currentTarget.value.toLowerCase();
     const res = mockData.filter((flag) =>
@@ -120,11 +124,15 @@ export const Dashboard = () => {
     );
   };
 
+  const handleSaveChanges = () => {
+    const changes = getChangedFlags(originalFlags, editableFlags);
+    if (changes.length === 0) return;
+    console.log("Sending changes to backend:", changes);
+    setOriginalFlags(editableFlags);
+  };
+
   const isDirty =
     JSON.stringify(originalFlags) !== JSON.stringify(editableFlags);
-
-  const [showEditAlert, setShowEditAlert] = useState(false);
-  const [selectedFlag, setSelectedFlag] = useState<FlagData | null>(null);
 
   const handleOpenEdit = (flagId: string) => {
     const flag = originalFlags.find((flag) => flag.flagId === flagId);
@@ -234,13 +242,18 @@ export const Dashboard = () => {
           editAlert={handleOpenEdit}
         />
       ))}
-      <Button className={isDirty ? `block` : `hidden`}>Save changes</Button>
       <EditDialog
         showEditAlert={showEditAlert}
         closeAlert={setShowEditAlert}
         editFlagData={selectedFlag}
         editSubmit={handleEditFlag}
       />
+      <Button
+        onClick={handleSaveChanges}
+        className={isDirty ? `block` : `hidden`}
+      >
+        Save changes
+      </Button>
     </>
   );
 };
