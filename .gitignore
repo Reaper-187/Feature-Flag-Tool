@@ -29,6 +29,10 @@ server/.env.local
 server/.env.development
 server/.env.production
 
+# generated-prisma files
+server/generated
+server/generated/prisma
+
 # Editor directories and files
 .vscode/
 !.vscode/extensions.json
@@ -40,3 +44,6 @@ server/.env.production
 *.sln
 *.sw?
 node_modules
+
+client/src/trash.tsx
+
