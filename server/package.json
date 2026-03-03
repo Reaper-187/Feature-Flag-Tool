@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "dev": "tsx src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js"
   },
@@ -22,6 +22,7 @@
     "pg": "^8.19.0"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/node": "^25.3.3",
     "@types/pg": "^8.18.0",
