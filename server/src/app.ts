@@ -1,5 +1,7 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
+import createFlag from "./modules/flag/flag.routes";
+
 export const app = express();
 // import { sessionSetup } from "./config/session";
 
@@ -17,6 +19,8 @@ app.use(
 // app.use(sessionSetup);
 
 app.use(express.json());
+
+app.use("/api", createFlag);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Backend running");
