@@ -1,10 +1,11 @@
 import { Request, Response } from "express";
+import { createFlag } from "./flag.service";
 
-export const createFlag = async (req: Request, res: Response) => {
+export const createFlagController = async (req: Request, res: Response) => {
   try {
     const flagPost = req.body;
     console.log("flagPost", flagPost);
-
+    await createFlag(flagPost);
     res.status(201).json({
       success: true,
       data: flagPost,

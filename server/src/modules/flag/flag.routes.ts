@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { createFlag } from "./flag.controller";
+import { createFlagController } from "./flag.controller";
 
 const router = Router();
 
-router.post("/createFlag", createFlag);
+router.post("/createFlag", createFlagController);
 
 export default router;

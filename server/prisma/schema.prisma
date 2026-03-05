@@ -7,12 +7,19 @@ datasource db {
   provider = "postgresql"
 }
 
-model environments {
-  id                Int                 @id @default(autoincrement())
-  name              String              @unique @db.VarChar(50)
+// Das Schema beschreibt das Fetaure
+model flags {
+  flag_id           String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  flag_name         String              @unique @db.VarChar(100)
+  flag_key_name     String              @unique @db.VarChar(100)
+  description       String?
+  flag_rollout      Int
+  created_by        String              @db.VarChar(100)
+  created_date      DateTime            @default(now()) @db.Timestamp(6)
   flag_environments flag_environments[]
 }
 
+// speichert ob das feature Aktiviert ist
 model flag_environments {
   flag_id        String       @db.Uuid
   environment_id Int
@@ -23,13 +30,17 @@ model flag_environments {
   @@id([flag_id, environment_id])
 }
 
-model flags {
-  flag_id           String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  flag_name         String              @unique @db.VarChar(100)
-  flag_key_name     String              @unique @db.VarChar(100)
-  description       String?
-  flag_rollout      Int?
-  created_by        String              @db.VarChar(100)
-  created_date      DateTime            @default(now()) @db.Timestamp(6)
+// beschriebt dev,stage und prodSwitch
+model environments {
+  id                Int                 @id @default(autoincrement())
+  name              String              @unique @db.VarChar(50)
   flag_environments flag_environments[]
 }
+
+// environments ---- enthält nur die Liste der Umgebungen
+//    ↑
+//    │
+// flag_environments ---- verbindet beides (n:m)
+//    │
+//    ↓
+// flags ---- enthält das Feature
