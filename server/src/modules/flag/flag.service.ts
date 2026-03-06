@@ -1,16 +1,48 @@
 import prisma from "../../lib/prisma";
-interface CreateFlagInput {
-  flagName: string;
-  flagKeyName: string;
-  description?: string;
-  flagRollout: number;
-  createdBy: string;
-  devSwitch: boolean;
-  stageSwitch: boolean;
-  prodSwitch: boolean;
+import { FlagData, FlagReqData } from "../../types/types";
+
+export async function getFlags() {
+  const flags = await prisma.flags.findMany({
+    include: {
+      flag_environments: {
+        include: {
+          environments: true,
+        },
+      },
+    },
+  });
+
+  return flags.map((flag) => {
+    const dev = flag.flag_environments.find(
+      (env) => env.environments.name === "dev",
+    );
+
+    const stage = flag.flag_environments.find(
+      (env) => env.environments.name === "stage",
+    );
+
+    const prod = flag.flag_environments.find(
+      (env) => env.environments.name === "prod",
+    );
+
+    return {
+      flagId: flag.flag_id,
+      flagName: flag.flag_name,
+      flagKeyName: flag.flag_key_name,
+      flagRollout: flag.flag_rollout,
+      description: flag.description ?? "",
+      createdBy: flag.created_by,
+      createdDate: flag.created_date.getTime(),
+
+      // switches aus der relation ableiten
+      devSwitch: dev?.is_enabled ?? false,
+      stageSwitch: stage?.is_enabled ?? false,
+      prodSwitch: prod?.is_enabled ?? false,
+    };
+  });
 }
 
-export async function createFlag(data: CreateFlagInput) {
+export async function createFlag(data: FlagReqData) {
   // $transaction sorgt dafür das mehrere DB handlungen als eine Einheit ausgeführt werden
   // Wenn ein Schritt fehlschlägt, wird ALLES zurückgesetzt
   return await prisma.$transaction(async (tx) => {
