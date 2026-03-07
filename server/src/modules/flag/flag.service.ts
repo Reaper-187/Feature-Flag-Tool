@@ -6,7 +6,7 @@ export async function getFlags() {
     include: {
       flag_environments: {
         include: {
-          environments: true,
+          environments: true, // der letzte include muss immer true sein sonst bekomme ich keine Daten
         },
       },
     },

@@ -1,7 +1,24 @@
 import { Request, Response } from "express";
-import { createFlag } from "./flag.service";
+import { createFlag, getFlags } from "./flag.service";
 import { FlagReqData } from "../../types/types";
 
+export const getFlagsController = async (req: Request, res: Response) => {
+  try {
+    const fetchedFlags = await getFlags();
+
+    res.status(201).json({
+      success: true,
+      data: fetchedFlags,
+      message: "Flag created successfully",
+    });
+  } catch (err) {
+    console.error("Error fetching flags:", err);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
 export const createFlagController = async (req: Request, res: Response) => {
   try {
     const data: FlagReqData = req.body;
