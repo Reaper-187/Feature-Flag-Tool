@@ -1,5 +1,5 @@
-import prisma from "./lib/prisma";
 import "dotenv/config";
+import prisma from "./lib/prisma";
 import { app } from "./app";
 
 if (process.env.NODE_ENV !== "production") {
