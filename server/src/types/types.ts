@@ -10,14 +10,11 @@ export interface FlagReqData {
 }
 
 export interface FlagData {
-  flagId: string;
-  flagName: string;
-  flagKeyName: string;
-  flagRollout: number;
-  description: string;
-  createdBy: string;
+  flag_id: string;
+  flag_name: string;
+  flag_rollout: number;
+  description?: string;
   devSwitch: boolean;
   stageSwitch: boolean;
   prodSwitch: boolean;
-  createdDate: number;
 }

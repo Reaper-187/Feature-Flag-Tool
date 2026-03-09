@@ -86,3 +86,48 @@ export async function createFlag(data: FlagReqData) {
     return newFlag;
   });
 }
+
+export async function updateFlag(data: FlagData) {
+  return await prisma.$transaction(async (tx) => {
+    const updatedFlag = await tx.flags.update({
+      where: { flag_id: data.flag_id },
+      data: {
+        flag_name: data.flag_name,
+        flag_rollout: data.flag_rollout,
+        description: data?.description,
+      },
+    });
+
+    const switchMapping = [
+      { envName: "dev", enabled: data.devSwitch },
+      { envName: "stage", enabled: data.stageSwitch },
+      { envName: "prod", enabled: data.prodSwitch },
+    ];
+
+    const environments = await tx.environments.findMany({
+      where: {
+        name: { in: switchMapping.map((e) => e.envName) },
+      },
+    });
+
+    for (const env of environments) {
+      const match = switchMapping.find((e) => e.envName === env.name);
+      if (!match) continue;
+
+      await tx.flag_environments.update({
+        where: {
+          // zusammengesetzter Primary-key
+          flag_id_environment_id: {
+            flag_id: data.flag_id,
+            environment_id: env.id,
+          },
+        },
+        data: {
+          is_enabled: match.enabled,
+        },
+      });
+    }
+
+    return updatedFlag;
+  });
+}

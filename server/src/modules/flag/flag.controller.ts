@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { createFlag, getFlags } from "./flag.service";
-import { FlagReqData } from "../../types/types";
+import { createFlag, getFlags, updateFlag } from "./flag.service";
+import { FlagData, FlagReqData } from "../../types/types";
 
 export const getFlagsController = async (req: Request, res: Response) => {
   try {
@@ -19,6 +19,7 @@ export const getFlagsController = async (req: Request, res: Response) => {
     });
   }
 };
+
 export const createFlagController = async (req: Request, res: Response) => {
   try {
     const data: FlagReqData = req.body;
@@ -79,6 +80,43 @@ export const createFlagController = async (req: Request, res: Response) => {
   } catch (err) {
     console.error("Error creating flag:", err);
 
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
+
+export const updateFlagController = async (req: Request, res: Response) => {
+  try {
+    const body = req.body;
+
+    if (!body) {
+      return res.status(400).json({
+        success: false,
+        message: "Request body is missing",
+      });
+    }
+
+    const convertedData: FlagData = {
+      flag_id: body.flagId,
+      flag_name: body.flagName,
+      flag_rollout: body.flagRollout,
+      description: body.description,
+      devSwitch: body.devSwitch,
+      stageSwitch: body.stageSwitch,
+      prodSwitch: body.prodSwitch,
+    };
+
+    const updatedFlag = await updateFlag(convertedData);
+
+    res.status(200).json({
+      success: true,
+      data: updatedFlag,
+      message: "Flag updated successfully",
+    });
+  } catch (err) {
+    console.error("Error updating flag:", err);
     res.status(500).json({
       success: false,
       message: "Internal server error",
