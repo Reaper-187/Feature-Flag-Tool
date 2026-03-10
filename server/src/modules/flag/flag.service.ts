@@ -131,3 +131,19 @@ export async function updateFlag(data: FlagData) {
     return updatedFlag;
   });
 }
+
+export async function deleteFlag(flag_id: string) {
+  if (!flag_id || typeof flag_id !== "string" || flag_id.trim().length === 0) {
+    throw new Error("INVALID_FLAG_ID");
+  }
+
+  try {
+    const deletedFlag = await prisma.flags.delete({
+      where: { flag_id },
+    });
+
+    return deletedFlag;
+  } catch (error: any) {
+    throw new Error("DELETE_FAILED");
+  }
+}
