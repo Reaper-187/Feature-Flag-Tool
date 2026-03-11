@@ -26,15 +26,3 @@ export interface FlagData {
   createdBy: string;
   createdDate: number;
 }
-
-export type FlagType = "Update" | "Analytics" | "Test";
-
-export const flagTypes: {
-  value: string;
-  label: FlagType;
-  icon: React.ElementType;
-}[] = [
-  { value: "update", label: "Update", icon: RefreshCcw },
-  { value: "analytics", label: "Analytics", icon: ChartNetwork },
-  { value: "test", label: "Test", icon: TestTubeDiagonal },
-];
