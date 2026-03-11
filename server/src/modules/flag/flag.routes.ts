@@ -11,6 +11,6 @@ const router = Router();
 router.get("/getFlags", getFlagsController);
 router.post("/createFlag", createFlagController);
 router.put("/updateFlag", updateFlagController);
-router.put("/deleteFlag", deleteFlagController);
+router.delete("/deleteFlag", deleteFlagController);
 
 export default router;
