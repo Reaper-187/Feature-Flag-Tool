@@ -5,6 +5,7 @@ import getFlags from "./modules/flag/flag.routes";
 import updateFlag from "./modules/flag/flag.routes";
 import deleteFlag from "./modules/flag/flag.routes";
 import loginAuth from "./modules/authentication/auth.routes";
+import registAuth from "./modules/authentication/auth.routes";
 
 export const app = express();
 // import { sessionSetup } from "./config/session";
@@ -29,6 +30,7 @@ app.use("/api", getFlags);
 app.use("/api", updateFlag);
 app.use("/api", deleteFlag);
 app.use("/api/auth", loginAuth);
+app.use("/api/auth", registAuth);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Backend running");
