@@ -16,7 +16,7 @@ export const loginAuthController = async (req: Request, res: Response) => {
 
     return res.status(200).json({
       success: true,
-      data: loginResult,
+      ...loginResult,
     });
   } catch (err: any) {
     if (err.message === "Invalid email or password") {

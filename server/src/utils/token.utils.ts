@@ -19,3 +19,8 @@ export const generateToken = (user_id: string): string => {
 
   return token;
 };
+
+export const verifyToken = (token: string) => {
+  const decoded = jwt.verify(token, jwt_secret);
+  return decoded as { user_id: string };
+};

@@ -1,6 +1,7 @@
 import prisma from "../../lib/prisma";
 import { UserRole } from "../../../generated/prisma/enums";
 import { comparePassword, hashPassword } from "../../utils/hash.utils";
+import { generateToken } from "../../utils/token.utils";
 
 interface userAuth {
   name: string;
@@ -64,5 +65,10 @@ export async function loginAuth(email: string, password: string) {
     ...safeUser
   } = findUsersCred;
 
-  return safeUser;
+  const token = generateToken(safeUser.user_id);
+
+  return {
+    user: safeUser,
+    token,
+  };
 }
