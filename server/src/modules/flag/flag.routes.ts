@@ -7,6 +7,7 @@ import {
 } from "./flag.controller";
 import { tokenAuthCheck } from "../authentication/auth.middleware";
 import { roleCheck } from "../../middleware/role.middleware";
+import { asyncHandler } from "../../utils/asyncHandler.utils";
 
 const router = Router();
 
@@ -15,14 +16,14 @@ router.post(
   "/createFlag",
   tokenAuthCheck,
   roleCheck("ADMIN"),
-  createFlagController,
+  asyncHandler(createFlagController),
 );
 router.put("/updateFlag", tokenAuthCheck, updateFlagController);
 router.put(
   "/deleteFlag",
   tokenAuthCheck,
   roleCheck("ADMIN"),
-  deleteFlagController,
+  asyncHandler(deleteFlagController),
 );
 
 export default router;

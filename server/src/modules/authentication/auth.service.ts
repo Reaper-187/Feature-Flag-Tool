@@ -2,6 +2,7 @@ import prisma from "../../lib/prisma";
 import { UserRole } from "../../../generated/prisma/enums";
 import { comparePassword, hashPassword } from "../../utils/hash.utils";
 import { generateToken } from "../../utils/token.utils";
+import { AppError } from "../../utils/appError.utils";
 
 interface userAuth {
   name: string;
@@ -15,7 +16,7 @@ export async function registAuth({ name, email, password }: userAuth) {
   });
 
   if (isUserRegist) {
-    throw new Error("INVALID: User already exist");
+    throw new AppError("Invalid email or password", 409);
   }
 
   const hashedPassword = await hashPassword(password);
@@ -44,7 +45,7 @@ export async function loginAuth(email: string, password: string) {
   });
 
   if (!findUsersCred) {
-    throw new Error("Invalid email or password");
+    throw new AppError("Invalid email or password", 401);
   }
 
   const checkUserPwInput = await comparePassword(
@@ -53,7 +54,7 @@ export async function loginAuth(email: string, password: string) {
   );
 
   if (!checkUserPwInput) {
-    throw new Error("Invalid email or password");
+    throw new AppError("Invalid email or password", 401);
   }
 
   const {

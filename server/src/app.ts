@@ -6,6 +6,7 @@ import updateFlag from "./modules/flag/flag.routes";
 import deleteFlag from "./modules/flag/flag.routes";
 import loginAuth from "./modules/authentication/auth.routes";
 import registAuth from "./modules/authentication/auth.routes";
+import { errorMiddleware } from "./middleware/error.middleware";
 
 export const app = express();
 // import { sessionSetup } from "./config/session";
@@ -21,9 +22,9 @@ app.use(
   }),
 );
 
-// app.use(sessionSetup);
-
 app.use(express.json());
+
+app.use(errorMiddleware);
 
 app.use("/api", createFlag);
 app.use("/api", getFlags);
