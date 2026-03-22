@@ -57,6 +57,41 @@ export async function registAuth({ name, email, password }: userAuth) {
   return newUser;
 }
 
+export async function emailVerify(token: string) {
+  const hashToken = crypto.createHash("sha256").update(token).digest("hex");
+
+  const checkToken = await prisma.users.findFirst({
+    where: {
+      verify_token: {
+        equals: hashToken,
+      },
+      verify_token_exp: {
+        gt: new Date(),
+      },
+    },
+  });
+
+  if (!checkToken) {
+    throw new AppError("Token is wrong or expired.", 401);
+  }
+
+  const updateAccount = await prisma.users.update({
+    where: {
+      user_id: checkToken.user_id,
+    },
+    data: {
+      verify_status: true,
+      verify_token: null,
+      verify_token_exp: null,
+    },
+  });
+
+  if (!updateAccount) {
+    throw new AppError("Server-Error", 400);
+  }
+  return { success: true };
+}
+
 export async function loginAuth(email: string, password: string) {
   const findUsersCred = await prisma.users.findUnique({
     where: { user_email: email },

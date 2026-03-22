@@ -29,6 +29,8 @@ export const registAuthController = async (req: Request, res: Response) => {
   return res.status(201).json({
     success: true,
     ...registResult,
+    message:
+      "Registration successfully - Please check your inbox for the verification.",
   });
 };
 
