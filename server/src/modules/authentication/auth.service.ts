@@ -3,7 +3,8 @@ import { UserRole } from "../../../generated/prisma/enums";
 import { comparePassword, hashPassword } from "../../utils/hash.utils";
 import { generateToken } from "../../utils/token.utils";
 import { AppError } from "../../utils/appError.utils";
-
+import crypto from "crypto";
+import { emailService } from "./auth.email.service";
 interface userAuth {
   name: string;
   email: string;
@@ -20,12 +21,24 @@ export async function registAuth({ name, email, password }: userAuth) {
   }
 
   const hashedPassword = await hashPassword(password);
+
+  const rawToken = crypto.randomBytes(32).toString("hex");
+
+  const hashedToken = crypto
+    .createHash("sha256")
+    .update(rawToken)
+    .digest("hex");
+
+  const tokenExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 Stunden gültig
+
   const newUser = await prisma.users.create({
     data: {
       user_name: name,
       user_email: email,
       password_hash: hashedPassword,
       role: UserRole.DEV,
+      verify_token: hashedToken,
+      verify_token_exp: tokenExpires,
     },
     select: {
       user_id: true,
@@ -34,6 +47,11 @@ export async function registAuth({ name, email, password }: userAuth) {
       role: true,
       created_at: true,
     },
+  });
+
+  await emailService({
+    email,
+    token: rawToken,
   });
 
   return newUser;

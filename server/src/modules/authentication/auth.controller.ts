@@ -31,3 +31,29 @@ export const registAuthController = async (req: Request, res: Response) => {
     ...registResult,
   });
 };
+
+// exports.emailVerify = async (req: Request, res: Response) => {
+//   const { token } = req.query;
+
+//     // Benutzer mit dem Token finden
+//     const user = await User.findOne({ "verfication.verificationToken": token });
+
+//     if (!user) {
+//       return res.status(400).send("Token is wrong or expired.");
+//     }
+
+//     if (user.verfication.verifyTokenExp < Date.now()) {
+//       return res.status(400).send("Token is wrong or expired.");
+//     }
+
+//     // Benutzer verifizieren
+//     user.verfication.isVerified = true;
+//     user.verfication.verificationToken = null; // Token entfernen
+//     user.verfication.verifyTokenExp = null; // Ablaufdatum entfernen
+//     await user.save();
+
+//     res.status(200).json({
+//       success: true,
+//       message: "E-Mail verified successfully! Now you can Sign-in.",
+//     });
+// };
