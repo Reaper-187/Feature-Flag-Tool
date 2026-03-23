@@ -110,6 +110,9 @@ export async function loginAuth(email: string, password: string) {
     throw new AppError("Invalid email or password", 401);
   }
 
+  if (!findUsersCred.verify_status) {
+    throw new AppError("Invalid email or password", 401);
+  }
   const {
     password_hash,
     reset_token,

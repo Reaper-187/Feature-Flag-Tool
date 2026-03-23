@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { loginAuth, registAuth } from "./auth.service";
+import { emailVerify, loginAuth, registAuth } from "./auth.service";
 import { AppError } from "../../utils/appError.utils";
 
 export const loginAuthController = async (req: Request, res: Response) => {
@@ -34,28 +34,17 @@ export const registAuthController = async (req: Request, res: Response) => {
   });
 };
 
-// exports.emailVerify = async (req: Request, res: Response) => {
-//   const { token } = req.query;
+export const emailVerifyController = async (req: Request, res: Response) => {
+  const token = req.query.token;
 
-//     // Benutzer mit dem Token finden
-//     const user = await User.findOne({ "verfication.verificationToken": token });
+  if (!token || typeof token !== "string") {
+    throw new AppError("Invalid or missing token", 400);
+  }
 
-//     if (!user) {
-//       return res.status(400).send("Token is wrong or expired.");
-//     }
+  await emailVerify(token);
 
-//     if (user.verfication.verifyTokenExp < Date.now()) {
-//       return res.status(400).send("Token is wrong or expired.");
-//     }
-
-//     // Benutzer verifizieren
-//     user.verfication.isVerified = true;
-//     user.verfication.verificationToken = null; // Token entfernen
-//     user.verfication.verifyTokenExp = null; // Ablaufdatum entfernen
-//     await user.save();
-
-//     res.status(200).json({
-//       success: true,
-//       message: "E-Mail verified successfully! Now you can Sign-in.",
-//     });
-// };
+  return res.status(200).json({
+    success: true,
+    message: "Email verification successful",
+  });
+};
