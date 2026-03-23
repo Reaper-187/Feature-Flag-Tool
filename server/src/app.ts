@@ -1,12 +1,7 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
-import createFlag from "./modules/flag/flag.routes";
-import getFlags from "./modules/flag/flag.routes";
-import updateFlag from "./modules/flag/flag.routes";
-import deleteFlag from "./modules/flag/flag.routes";
-import loginAuth from "./modules/authentication/auth.routes";
-import registAuth from "./modules/authentication/auth.routes";
-import emailVerify from "./modules/authentication/auth.routes";
+import flagRouter from "./modules/flag/flag.routes";
+import authRouter from "./modules/authentication/auth.routes";
 import { errorMiddleware } from "./middleware/error.middleware";
 
 export const app = express();
@@ -27,13 +22,8 @@ app.use(express.json());
 
 app.use(errorMiddleware);
 
-app.use("/api", createFlag);
-app.use("/api", getFlags);
-app.use("/api", updateFlag);
-app.use("/api", deleteFlag);
-app.use("/api/auth", loginAuth);
-app.use("/api/auth", registAuth);
-app.use("/api/auth", emailVerify);
+app.use("/api", flagRouter);
+app.use("/api/auth", authRouter);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Backend running");

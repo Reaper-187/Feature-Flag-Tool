@@ -1,5 +1,10 @@
 import { Request, Response } from "express";
-import { emailVerify, loginAuth, registAuth } from "./auth.service";
+import {
+  emailVerify,
+  loginAuth,
+  registAuth,
+  resendEmail,
+} from "./auth.service";
 import { AppError } from "../../utils/appError.utils";
 
 export const loginAuthController = async (req: Request, res: Response) => {
@@ -46,5 +51,23 @@ export const emailVerifyController = async (req: Request, res: Response) => {
   return res.status(200).json({
     success: true,
     message: "Email verification successful",
+  });
+};
+
+export const resendEmailVerifyController = async (
+  req: Request,
+  res: Response,
+) => {
+  const { email } = req.body;
+
+  if (!email) {
+    throw new AppError("Invalid or missing credentials", 400);
+  }
+
+  await resendEmail(email);
+
+  return res.status(200).json({
+    success: true,
+    message: "please check your inbox",
   });
 };

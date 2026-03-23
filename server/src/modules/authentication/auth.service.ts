@@ -129,3 +129,46 @@ export async function loginAuth(email: string, password: string) {
     token,
   };
 }
+
+export async function resendEmail(email: string) {
+  const findUsersCred = await prisma.users.findUnique({
+    where: { user_email: email },
+  });
+
+  if (!findUsersCred || findUsersCred.verify_status) return;
+
+  if (
+    findUsersCred.verify_token_exp &&
+    findUsersCred.verify_token_exp > new Date()
+  ) {
+    return;
+  }
+
+  const rawToken = crypto.randomBytes(32).toString("hex");
+
+  const hashedToken = crypto
+    .createHash("sha256")
+    .update(rawToken)
+    .digest("hex");
+
+  const tokenExpires = new Date(Date.now() + 24 * 60 * 60 * 1000);
+
+  await prisma.users.update({
+    where: {
+      user_id: findUsersCred.user_id,
+    },
+    data: {
+      verify_token: hashedToken,
+      verify_token_exp: tokenExpires,
+    },
+  });
+
+  await emailService({
+    email: findUsersCred.user_email,
+    token: rawToken,
+  });
+
+  return {
+    success: true,
+  };
+}
