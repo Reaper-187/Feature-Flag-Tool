@@ -3,7 +3,9 @@ import {
   emailVerify,
   loginAuth,
   registAuth,
+  requestPasswordReset,
   resendEmail,
+  resetPassword,
 } from "./auth.service";
 import { AppError } from "../../utils/appError.utils";
 
@@ -69,5 +71,39 @@ export const resendEmailVerifyController = async (
   return res.status(200).json({
     success: true,
     message: "please check your inbox",
+  });
+};
+
+export const requestPasswordResetController = async (
+  req: Request,
+  res: Response,
+) => {
+  const { email } = req.body;
+
+  if (!email) {
+    throw new AppError("email is required", 400);
+  }
+
+  await requestPasswordReset(email);
+
+  res.status(200).json({
+    success: true,
+    message: "please check your inbox",
+  });
+};
+
+export const resetPasswordController = async (req: Request, res: Response) => {
+  const token = req.query.token;
+  const { password } = req.body;
+
+  if (!password || !token || typeof token !== "string") {
+    throw new AppError("Invalid or missing credentials", 400);
+  }
+
+  await resetPassword(password, token);
+
+  return res.status(200).json({
+    success: true,
+    message: "password-change successfully",
   });
 };

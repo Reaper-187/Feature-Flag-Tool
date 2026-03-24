@@ -52,6 +52,7 @@ export async function registAuth({ name, email, password }: userAuth) {
   await emailService({
     email,
     token: rawToken,
+    type: "VERIFY_EMAIL",
   });
 
   return newUser;
@@ -72,7 +73,7 @@ export async function emailVerify(token: string) {
   });
 
   if (!checkToken) {
-    throw new AppError("Token is wrong or expired.", 401);
+    throw new AppError("Token is wrong or expired.", 400);
   }
 
   const updateAccount = await prisma.users.update({
@@ -113,14 +114,8 @@ export async function loginAuth(email: string, password: string) {
   if (!findUsersCred.verify_status) {
     throw new AppError("Invalid email or password", 401);
   }
-  const {
-    password_hash,
-    reset_token,
-    reset_token_exp,
-    otp_code,
-    otp_exp,
-    ...safeUser
-  } = findUsersCred;
+  const { password_hash, reset_token, reset_token_exp, ...safeUser } =
+    findUsersCred;
 
   const token = generateToken(safeUser.user_id);
 
@@ -166,9 +161,79 @@ export async function resendEmail(email: string) {
   await emailService({
     email: findUsersCred.user_email,
     token: rawToken,
+    type: "VERIFY_EMAIL",
   });
 
   return {
     success: true,
   };
+}
+
+export async function requestPasswordReset(email: string) {
+  const user = await prisma.users.findUnique({
+    where: { user_email: email },
+  });
+
+  if (!user) return;
+
+  if (user.reset_token_exp && user.reset_token_exp > new Date()) {
+    return;
+  }
+
+  const rawToken = crypto.randomBytes(32).toString("hex");
+
+  const hashedToken = crypto
+    .createHash("sha256")
+    .update(rawToken)
+    .digest("hex");
+
+  const tokenExpires = new Date(Date.now() + 10 * 60 * 1000);
+
+  await prisma.users.update({
+    where: {
+      user_id: user.user_id,
+    },
+    data: {
+      reset_token: hashedToken,
+      reset_token_exp: tokenExpires,
+    },
+  });
+
+  await emailService({
+    email: user.user_email,
+    token: rawToken,
+    type: "RESET_PASSWORD",
+  });
+}
+
+export async function resetPassword(password: string, token: string) {
+  const hashToken = crypto.createHash("sha256").update(token).digest("hex");
+
+  const userToken = await prisma.users.findFirst({
+    where: {
+      reset_token: {
+        equals: hashToken,
+      },
+      reset_token_exp: {
+        gt: new Date(),
+      },
+    },
+  });
+
+  if (!userToken) {
+    throw new AppError("Token is wrong or expired.", 400);
+  }
+
+  const hashedNewPassword = await hashPassword(password);
+
+  await prisma.users.update({
+    where: { user_id: userToken.user_id },
+    data: {
+      password_hash: hashedNewPassword,
+      reset_token: null,
+      reset_token_exp: null,
+      wrong_pw_count: 0,
+      blocked: false,
+    },
+  });
 }

@@ -25,14 +25,11 @@ model users {
   blocked        Boolean @default(false)
 
   verify_status    Boolean   @default(false)
-  verify_token     String?
+  verify_token     String?   @unique
   verify_token_exp DateTime?
 
-  reset_token     String?
+  reset_token     String?   @unique
   reset_token_exp DateTime?
-
-  otp_code Int?
-  otp_exp  DateTime?
 }
 
 // Das Schema beschreibt das Fetaure
