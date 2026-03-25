@@ -30,6 +30,9 @@ model users {
 
   reset_token     String?   @unique
   reset_token_exp DateTime?
+
+  refresh_token     String?   @unique
+  refresh_token_exp DateTime?
 }
 
 // Das Schema beschreibt das Fetaure

@@ -94,34 +94,58 @@ export async function emailVerify(token: string) {
 }
 
 export async function loginAuth(email: string, password: string) {
-  const findUsersCred = await prisma.users.findUnique({
+  const user = await prisma.users.findUnique({
     where: { user_email: email },
   });
 
-  if (!findUsersCred) {
+  if (!user) {
     throw new AppError("Invalid email or password", 401);
   }
 
-  const checkUserPwInput = await comparePassword(
-    password,
-    findUsersCred.password_hash,
-  );
+  const isPasswordValid = await comparePassword(password, user.password_hash);
 
-  if (!checkUserPwInput) {
+  if (!isPasswordValid) {
     throw new AppError("Invalid email or password", 401);
   }
 
-  if (!findUsersCred.verify_status) {
+  if (!user.verify_status) {
     throw new AppError("Invalid email or password", 401);
   }
-  const { password_hash, reset_token, reset_token_exp, ...safeUser } =
-    findUsersCred;
 
-  const token = generateToken(safeUser.user_id);
+  const accessToken = generateToken(user.user_id);
+
+  const refreshToken = crypto.randomBytes(32).toString("hex");
+
+  const hashedRefreshToken = crypto
+    .createHash("sha256")
+    .update(refreshToken)
+    .digest("hex");
+
+  const refreshTokenExp = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+
+  await prisma.users.update({
+    where: { user_id: user.user_id },
+    data: {
+      refresh_token: hashedRefreshToken,
+      refresh_token_exp: refreshTokenExp,
+    },
+  });
+
+  const {
+    password_hash,
+    reset_token,
+    reset_token_exp,
+    verify_token,
+    verify_token_exp,
+    refresh_token,
+    refresh_token_exp,
+    ...safeUser
+  } = user;
 
   return {
     user: safeUser,
-    token,
+    accessToken,
+    refreshToken,
   };
 }
 

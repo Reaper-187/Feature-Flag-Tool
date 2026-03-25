@@ -7,7 +7,7 @@ import {
   resendEmail,
   resetPassword,
 } from "./auth.service";
-import { AppError } from "../../utils/appError.utils";
+import { AppError } from "@/utils/appError.utils";
 
 export const loginAuthController = async (req: Request, res: Response) => {
   const { email, password } = req.body;
