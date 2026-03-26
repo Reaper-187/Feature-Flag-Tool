@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import flagRouter from "./modules/flag/flag.routes";
 import authRouter from "./modules/authentication/auth.routes";
+import cookieParser from "cookie-parser";
 import { errorMiddleware } from "./middleware/error.middleware";
 
 export const app = express();
@@ -19,6 +20,7 @@ app.use(
 );
 
 app.use(express.json());
+app.use(cookieParser());
 
 app.use(errorMiddleware);
 

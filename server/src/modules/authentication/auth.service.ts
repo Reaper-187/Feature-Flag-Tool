@@ -112,9 +112,8 @@ export async function loginAuth(email: string, password: string) {
     throw new AppError("Invalid email or password", 401);
   }
 
-  const accessToken = generateToken(user.user_id);
-
-  const refreshToken = crypto.randomBytes(32).toString("hex");
+  const accessToken = generateToken(user.user_id); // zweck => API Zugriff erlauben
+  const refreshToken = crypto.randomBytes(32).toString("hex"); // zweck => neuen Access Token erzeugen in der refreshAccessToken()
 
   const hashedRefreshToken = crypto
     .createHash("sha256")
@@ -146,6 +145,36 @@ export async function loginAuth(email: string, password: string) {
     user: safeUser,
     accessToken,
     refreshToken,
+  };
+}
+
+export async function refreshAccessToken(refreshToken: string) {
+  if (!refreshToken) {
+    throw new AppError("Unauthorized", 401);
+  }
+
+  const hashedToken = crypto
+    .createHash("sha256")
+    .update(refreshToken)
+    .digest("hex");
+
+  const user = await prisma.users.findFirst({
+    where: {
+      refresh_token: { equals: hashedToken },
+      refresh_token_exp: {
+        gt: new Date(),
+      },
+    },
+  });
+
+  if (!user) {
+    throw new AppError("Invalid or expired token", 401);
+  }
+
+  const newAccessToken = generateToken(user.user_id);
+
+  return {
+    newAccessToken,
   };
 }
 

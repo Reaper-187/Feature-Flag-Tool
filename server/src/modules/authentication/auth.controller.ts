@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import {
   emailVerify,
   loginAuth,
+  refreshAccessToken,
   registAuth,
   requestPasswordReset,
   resendEmail,
@@ -16,11 +17,34 @@ export const loginAuthController = async (req: Request, res: Response) => {
     throw new AppError("email and password are required", 400);
   }
 
-  const result = await loginAuth(email, password);
+  const { user, accessToken, refreshToken } = await loginAuth(email, password);
+
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+  });
 
   return res.status(200).json({
     success: true,
-    ...result,
+    user,
+    accessToken,
+  });
+};
+
+export const refreshTokenController = async (req: Request, res: Response) => {
+  const refreshToken = req.cookies.refreshToken;
+
+  if (!refreshToken) {
+    throw new AppError("Unauthorized", 401);
+  }
+
+  const { newAccessToken } = await refreshAccessToken(refreshToken);
+
+  return res.status(200).json({
+    success: true,
+    newAccessToken,
   });
 };
 
