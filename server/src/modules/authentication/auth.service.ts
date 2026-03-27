@@ -290,3 +290,23 @@ export async function resetPassword(password: string, token: string) {
     },
   });
 }
+
+export async function logoutUser(refreshToken: string) {
+  if (!refreshToken) return;
+
+  const hashedToken = crypto
+    .createHash("sha256")
+    .update(refreshToken)
+    .digest("hex");
+
+  await prisma.users.updateMany({
+    // nicht update sondern updateMany damit kein error geworfen wird sollte was schieflaufen (sicherer)
+    where: {
+      refresh_token: hashedToken,
+    },
+    data: {
+      refresh_token: null,
+      refresh_token_exp: null,
+    },
+  });
+}

@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import {
   emailVerify,
   loginAuth,
+  logoutUser,
   refreshAccessToken,
   registAuth,
   requestPasswordReset,
@@ -129,5 +130,18 @@ export const resetPasswordController = async (req: Request, res: Response) => {
   return res.status(200).json({
     success: true,
     message: "password-change successfully",
+  });
+};
+
+export const logoutController = async (req: Request, res: Response) => {
+  const refreshToken = req.cookies.refreshToken;
+
+  await logoutUser(refreshToken);
+
+  res.clearCookie("refreshToken");
+
+  return res.status(200).json({
+    success: true,
+    message: "logged out",
   });
 };
