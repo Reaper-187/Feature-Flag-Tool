@@ -160,7 +160,7 @@ export async function refreshAccessToken(refreshToken: string) {
 
   const user = await prisma.users.findFirst({
     where: {
-      refresh_token: { equals: hashedToken },
+      refresh_token: hashedToken,
       refresh_token_exp: {
         gt: new Date(),
       },
@@ -173,8 +173,26 @@ export async function refreshAccessToken(refreshToken: string) {
 
   const newAccessToken = generateToken(user.user_id);
 
+  const rawRefreshToken = crypto.randomBytes(32).toString("hex");
+
+  const hashedRefreshToken = crypto
+    .createHash("sha256")
+    .update(rawRefreshToken)
+    .digest("hex");
+
+  const refreshTokenExp = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+
+  await prisma.users.update({
+    where: { user_id: user.user_id },
+    data: {
+      refresh_token: hashedRefreshToken,
+      refresh_token_exp: refreshTokenExp,
+    },
+  });
+
   return {
     newAccessToken,
+    newRefreshToken: rawRefreshToken,
   };
 }
 

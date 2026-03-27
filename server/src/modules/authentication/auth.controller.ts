@@ -41,11 +41,18 @@ export const refreshTokenController = async (req: Request, res: Response) => {
     throw new AppError("Unauthorized", 401);
   }
 
-  const { newAccessToken } = await refreshAccessToken(refreshToken);
+  const { newAccessToken, newRefreshToken } =
+    await refreshAccessToken(refreshToken);
+
+  res.cookie("refreshToken", newRefreshToken, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "strict",
+  });
 
   return res.status(200).json({
     success: true,
-    newAccessToken,
+    accessToken: newAccessToken,
   });
 };
 

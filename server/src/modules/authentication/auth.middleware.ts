@@ -7,17 +7,17 @@ export function tokenAuthCheck(
   next: NextFunction,
 ) {
   try {
-    const authHeader = req.headers.authorization;
+    const accessToken = req.headers.authorization;
 
-    if (!authHeader) {
+    if (!accessToken) {
       return res.status(401).json({ message: "No token provided" });
     }
 
-    if (!authHeader.startsWith("Bearer ")) {
+    if (!accessToken.startsWith("Bearer ")) {
       return res.status(401).json({ message: "Invalid token format" });
     }
 
-    const token = authHeader.split(" ")[1];
+    const token = accessToken.split(" ")[1];
 
     if (!token) {
       return res.status(401).json({ message: "Token missing" });
