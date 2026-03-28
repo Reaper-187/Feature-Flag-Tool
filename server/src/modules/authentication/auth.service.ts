@@ -94,6 +94,8 @@ export async function emailVerify(token: string) {
 }
 
 export async function loginAuth(email: string, password: string) {
+  const MAX_ATTEMPTS = 3;
+
   const user = await prisma.users.findUnique({
     where: { user_email: email },
   });
@@ -102,18 +104,49 @@ export async function loginAuth(email: string, password: string) {
     throw new AppError("Invalid email or password", 401);
   }
 
+  if (user.blocked) {
+    throw new AppError("Account is blocked. Contact admin.", 403);
+  }
+
   const isPasswordValid = await comparePassword(password, user.password_hash);
 
   if (!isPasswordValid) {
-    throw new AppError("Invalid email or password", 401);
+    const newCount = user.wrong_pw_count + 1;
+
+    await prisma.users.update({
+      where: { user_id: user.user_id },
+      data: {
+        wrong_pw_count: newCount,
+        blocked: newCount >= MAX_ATTEMPTS,
+      },
+    });
+
+    const attemptsLeft = MAX_ATTEMPTS - newCount;
+
+    throw new AppError(
+      attemptsLeft > 0
+        ? `Invalid email or password. ${attemptsLeft} attempts left`
+        : "Account blocked due to too many failed attempts",
+      401,
+    );
   }
 
   if (!user.verify_status) {
     throw new AppError("Invalid email or password", 401);
   }
 
-  const accessToken = generateToken(user.user_id); // zweck => API Zugriff erlauben
-  const refreshToken = crypto.randomBytes(32).toString("hex"); // zweck => neuen Access Token erzeugen in der refreshAccessToken()
+  if (user.wrong_pw_count > 0) {
+    await prisma.users.update({
+      where: { user_id: user.user_id },
+      data: {
+        wrong_pw_count: 0,
+      },
+    });
+  }
+
+  const accessToken = generateToken(user.user_id);
+
+  const refreshToken = crypto.randomBytes(32).toString("hex");
 
   const hashedRefreshToken = crypto
     .createHash("sha256")
@@ -130,16 +163,7 @@ export async function loginAuth(email: string, password: string) {
     },
   });
 
-  const {
-    password_hash,
-    reset_token,
-    reset_token_exp,
-    verify_token,
-    verify_token_exp,
-    refresh_token,
-    refresh_token_exp,
-    ...safeUser
-  } = user;
+  const { password_hash, ...safeUser } = user;
 
   return {
     user: safeUser,
