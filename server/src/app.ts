@@ -1,9 +1,9 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
-import createFlag from "./modules/flag/flag.routes";
-import getFlags from "./modules/flag/flag.routes";
-import updateFlag from "./modules/flag/flag.routes";
-import deleteFlag from "./modules/flag/flag.routes";
+import flagRouter from "./modules/flag/flag.routes";
+import authRouter from "./modules/authentication/auth.routes";
+import cookieParser from "cookie-parser";
+import { errorMiddleware } from "./middleware/error.middleware";
 
 export const app = express();
 // import { sessionSetup } from "./config/session";
@@ -19,14 +19,13 @@ app.use(
   }),
 );
 
-// app.use(sessionSetup);
-
 app.use(express.json());
+app.use(cookieParser());
 
-app.use("/api", createFlag);
-app.use("/api", getFlags);
-app.use("/api", updateFlag);
-app.use("/api", deleteFlag);
+app.use(errorMiddleware);
+
+app.use("/api", flagRouter);
+app.use("/api/auth", authRouter);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Backend running");

@@ -1,5 +1,6 @@
 import prisma from "../../lib/prisma";
 import { FlagData, FlagReqData } from "../../types/types";
+import { AppError } from "../../utils/appError.utils";
 
 export async function getFlags() {
   const flags = await prisma.flags.findMany({
@@ -134,7 +135,7 @@ export async function updateFlag(data: FlagData) {
 
 export async function deleteFlag(flag_id: string) {
   if (!flag_id || typeof flag_id !== "string" || flag_id.trim().length === 0) {
-    throw new Error("INVALID_FLAG_ID");
+    throw new AppError("INVALID FLAG-ID", 400);
   }
 
   try {
@@ -144,6 +145,6 @@ export async function deleteFlag(flag_id: string) {
 
     return deletedFlag;
   } catch (error: any) {
-    throw new Error("DELETE_FAILED");
+    throw new AppError("Forbidden for this Role", 401);
   }
 }
