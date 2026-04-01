@@ -6,9 +6,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { useRegister } from "@/hooks/authHooks/use.register";
 import { registerFormSchema } from "@/types/types";
 // import { guestAccessHook } from "@/hooks/AuthHooks/useGuestAccess";
-// import { useRegister } from "@/hooks/AuthHooks/useRegister";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff, User } from "lucide-react";
 import { useState } from "react";
@@ -32,23 +32,21 @@ export const Register = ({ onSwitch }: Props) => {
   } = useForm<FormRegister>({
     resolver: zodResolver(registerFormSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
+      userName: "",
       email: "",
       password: "",
     },
   });
 
-  // const { mutate, isPending: registLoad } = useRegister();
+  const { mutate, isPending: registLoad } = useRegister();
 
   // const { mutate: guestLogin, isPending: guestLoginLoad } = guestAccessHook();
 
   const handleRegister = (data: FormRegister) => {
-    // mutate(data);
-    console.log(data);
+    mutate(data);
   };
 
-  // const noCheck = registLoad || guestLoginLoad;
+  const noCheck = registLoad; /* || guestLoginLoad */
 
   const checkPasswordCriteria = (password: string = "") => {
     return {
@@ -90,32 +88,23 @@ export const Register = ({ onSwitch }: Props) => {
             <div className="flex gap-4">
               <Input
                 className="text-red-400"
-                type="firstName"
-                placeholder="firstname"
-                {...register("firstName")}
+                type="userName"
+                placeholder="Name"
+                {...register("userName")}
               />
-              {errors.firstName && (
-                <p className="text-red-300">{errors.firstName?.message}</p>
+              {errors.userName && (
+                <p className="text-red-300">{errors.userName?.message}</p>
               )}
               <Input
                 className="text-red-400"
-                type="lastName"
-                placeholder="lastname"
-                {...register("lastName")}
+                type="email"
+                placeholder="E-mail"
+                {...register("email")}
               />
-              {errors.lastName && (
-                <p className="text-red-300">{errors.lastName?.message}</p>
+              {errors.email && (
+                <p className="text-red-600">{errors.email.message}</p>
               )}
             </div>
-            <Input
-              className="text-red-400"
-              type="email"
-              placeholder="email"
-              {...register("email")}
-            />
-            {errors.email && (
-              <p className="text-red-600">{errors.email.message}</p>
-            )}
             <div className="relative">
               <Input
                 {...register("password")}
@@ -143,14 +132,11 @@ export const Register = ({ onSwitch }: Props) => {
             )}
           </div>
           <div className="w-full grid grid-cols-2 gap-4">
-            <Button /*disabled={noCheck ? true : false}*/ className="w-full">
-              {/* {noCheck ? "please wait..." : "Registration"} */}
-              {"Registration"}
+            <Button disabled={noCheck ? true : false} className="w-full">
+              {noCheck ? "please wait..." : "Registration"}
             </Button>
             <Button type="button" className="w-full" onClick={onSwitch}>
               Switch to Login
-              {/* <Link className="w-full" to={"/login"} >
-              </Link> */}
             </Button>
           </div>
           <div className="relative">

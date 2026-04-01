@@ -6,6 +6,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { useLogin } from "@/hooks/authHooks/use.login";
 // import { guestAccessHook } from "@/hooks/AuthHooks/useGuestAccess";
 // import { useLogin } from "@/hooks/AuthHooks/useLogin";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -41,16 +42,15 @@ export const Login = ({ onSwitch }: Props) => {
     },
   });
 
-  // const { mutate: userLogin, isPending: loginLoad } = useLogin();
+  const { mutate: userLogin, isPending: loginLoad } = useLogin();
 
   // const { mutate: guestLogin, isPending: guestLoginLoad } = guestAccessHook();
 
   const handleLogin = (data: FormLogin) => {
-    // userLogin(data);
-    console.log(data);
+    userLogin(data);
   };
 
-  // const noCheck = loginLoad || guestLoginLoad;
+  const noCheck = loginLoad;
 
   return (
     <div className="w-full h-full flex items-center justify-center p-4">
@@ -97,25 +97,23 @@ export const Login = ({ onSwitch }: Props) => {
             )}
           </div>
           <Link
-            // hidden={noCheck ? true : false}
+            hidden={noCheck ? true : false}
             className="text-blue-400 hover:text-blue-500 font-medium"
             to={"/reset-password-authentication"}
           >
             forgot password
           </Link>
           <div className="w-full grid grid-cols-2 gap-4">
-            <Button /*disabled={noCheck ? true : false}*/ className="w-full">
-              {/* {loginLoad ? "in Progress..." : "Sign in"} */}
-              {"Sign in"}
+            <Button disabled={noCheck ? true : false} className="w-full">
+              {loginLoad ? "in Progress..." : "Sign in"}
             </Button>
             <Button
               type="button"
-              /*disabled={noCheck ? true : false}*/ onClick={onSwitch}
+              disabled={noCheck ? true : false}
+              onClick={onSwitch}
               className="w-full"
             >
               Switch to Register
-              {/* <Link className="w-full" to={"/register"}>
-              </Link> */}
             </Button>
           </div>
           <div className="relative">
