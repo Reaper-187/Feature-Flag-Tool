@@ -8,7 +8,8 @@ export const useLogin = () => {
 
   return useMutation({
     mutationFn: fetchLogin,
-    onSuccess: async () => {
+    onSuccess: async (data) => {
+      localStorage.setItem("accessToken", data.accessToken);
       await queryClient.invalidateQueries({ queryKey: ["auth"] });
       toast(`Welcome back ${"🔓"}`);
     },

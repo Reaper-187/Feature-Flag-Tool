@@ -1,4 +1,4 @@
-import axios from "axios";
+import { api } from "./api";
 
 const LOGIN_API = import.meta.env.VITE_API_LOGIN;
 const REGISTER_API = import.meta.env.VITE_API_REGISTER;
@@ -9,7 +9,7 @@ const REGISTER_API = import.meta.env.VITE_API_REGISTER;
 // const RESET_USER_PW_API = import.meta.env.VITE_API_RESETUPW;
 // const CHANGE_PW_API = import.meta.env.VITE_API_CHANGEPW;
 
-export type ApiMessage = { message: string };
+export type ApiMessage = { message: string; accessToken: string };
 
 export type UserLoginProps = {
   email: string | undefined;
@@ -17,7 +17,7 @@ export type UserLoginProps = {
 };
 
 export const fetchLogin = async (data: UserLoginProps): Promise<ApiMessage> => {
-  const response = await axios.post<ApiMessage>(LOGIN_API, data, {
+  const response = await api.post<ApiMessage>(LOGIN_API, data, {
     withCredentials: true,
   });
   return response.data;
@@ -32,7 +32,7 @@ export type UserRegisterProps = {
 export const fetchRegister = async (
   data: UserRegisterProps,
 ): Promise<ApiMessage> => {
-  const response = await axios.post<ApiMessage>(REGISTER_API, data, {
+  const response = await api.post<ApiMessage>(REGISTER_API, data, {
     withCredentials: true,
   });
   return response.data;
