@@ -1,6 +1,7 @@
 import { api } from "./api";
 
 const LOGIN_API = import.meta.env.VITE_API_LOGIN;
+const ME_API = import.meta.env.VITE_API_ME;
 const REGISTER_API = import.meta.env.VITE_API_REGISTER;
 // const LOGOUT_API = import.meta.env.VITE_API_LOGOUT;
 // const GUEST_ACCESS_API = import.meta.env.VITE_API_GUEST_ACCESS;
@@ -35,5 +36,20 @@ export const fetchRegister = async (
   const response = await api.post<ApiMessage>(REGISTER_API, data, {
     withCredentials: true,
   });
+  return response.data;
+};
+
+export type MeInfo = {
+  user_id: string;
+  email: string;
+  name: string;
+  role: "DEV" | "ADMIN";
+};
+
+export const fetchMeInfo = async (): Promise<MeInfo> => {
+  const response = await api.get<MeInfo>(ME_API, {
+    withCredentials: true,
+  });
+
   return response.data;
 };

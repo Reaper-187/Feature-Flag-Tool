@@ -11,6 +11,20 @@ interface userAuth {
   password: string;
 }
 
+export async function getUser(user_Id: string) {
+  const user = await prisma.users.findUnique({
+    where: { user_id: user_Id },
+  });
+
+  if (!user) return null;
+
+  return {
+    user_id: user.user_id,
+    email: user.user_email,
+    name: user.user_name,
+    role: user.role,
+  };
+}
 export async function registAuth({ name, email, password }: userAuth) {
   const isUserRegist = await prisma.users.findUnique({
     where: { user_email: email },

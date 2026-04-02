@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import {
   emailVerify,
+  getUser,
   loginAuth,
   logoutUser,
   refreshAccessToken,
@@ -10,6 +11,12 @@ import {
   resetPassword,
 } from "./auth.service";
 import { AppError } from "@/utils/appError.utils";
+
+export const getMeController = async (req: Request, res: Response) => {
+  const user = await getUser(req.user!.user_id);
+
+  return res.status(200).json(user);
+};
 
 export const loginAuthController = async (req: Request, res: Response) => {
   const { email, password } = req.body;
@@ -57,7 +64,7 @@ export const refreshTokenController = async (req: Request, res: Response) => {
 };
 
 export const registAuthController = async (req: Request, res: Response) => {
-  const { name, email, password } = req.body;
+  const { userName: name, email, password } = req.body;
 
   if (!name || !email || !password) {
     throw new AppError("Name, email and password are required", 400);

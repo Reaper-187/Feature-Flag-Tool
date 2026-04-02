@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  getMeController,
   loginAuthController,
   registAuthController,
   emailVerifyController,
@@ -16,7 +17,10 @@ import {
   resendVerificationLimiter,
   resetLimiter,
 } from "@/middleware/rate-limit.middleware";
+import { tokenAuthCheck } from "./auth.middleware";
 const router = Router();
+
+router.get("/me", tokenAuthCheck, getMeController);
 
 router.post("/registAuth", registerLimiter, registAuthController);
 

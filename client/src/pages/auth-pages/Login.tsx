@@ -13,7 +13,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff, User } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import z from "zod";
 
 const loginFormSchema = z.object({
@@ -28,6 +28,7 @@ type Props = {
 };
 
 export const Login = ({ onSwitch }: Props) => {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
   const {
@@ -42,12 +43,16 @@ export const Login = ({ onSwitch }: Props) => {
     },
   });
 
-  const { mutate: userLogin, isPending: loginLoad } = useLogin();
-
   // const { mutate: guestLogin, isPending: guestLoginLoad } = guestAccessHook();
 
+  const { mutate: userLogin, isPending: loginLoad } = useLogin();
+
   const handleLogin = (data: FormLogin) => {
-    userLogin(data);
+    userLogin(data, {
+      onSuccess: () => {
+        navigate("/dashboard");
+      },
+    });
   };
 
   const noCheck = loginLoad;
@@ -69,12 +74,7 @@ export const Login = ({ onSwitch }: Props) => {
           onSubmit={handleSubmit(handleLogin)}
         >
           <div className="space-y-5">
-            <Input
-              className="text-red-400"
-              type="email"
-              placeholder="email"
-              {...register("email")}
-            />
+            <Input type="email" placeholder="email" {...register("email")} />
             {errors.email && (
               <p className="text-red-600">{errors.email.message}</p>
             )}
