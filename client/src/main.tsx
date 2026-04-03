@@ -11,6 +11,8 @@ import { Toaster } from "sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Dashboard } from "./pages/Dashboard.tsx";
 import { NewFlag } from "./pages/NewFlag.tsx";
+import { Register } from "./pages/auth-pages/Register.tsx";
+import { AuthPage } from "./pages/AuthPage.tsx";
 
 const queryClient = new QueryClient();
 
@@ -49,35 +51,25 @@ const queryClient = new QueryClient();
 //   ),
 // },
 const router = createBrowserRouter([
-  // {
-  //   path: "/login",
-  //   element: (
-  //     <>
-  //       <PublicRoute>
-  //         <Login />
-  //       </PublicRoute>
-  //     </>
-  //   ),
-  // },
-  // {
-  //   path: "/register",
-  //   element: (
-  //     <>
-  //       <PublicRoute>
-  //         <Register />
-  //       </PublicRoute>
-  //     </>
-  //   ),
-  // },
+  {
+    path: "/authentication",
+    element: (
+      <>
+        {/* <PublicRoute> */}
+        <AuthPage />
+        {/* </PublicRoute> */}
+      </>
+    ),
+  },
 
   {
     element: (
       // <ProtectedRoute>
-      // </ProtectedRoute>
       <App />
+      // </ProtectedRoute>
     ),
     children: [
-      { path: "/", element: <Navigate to="/dashboard" replace /> },
+      { path: "/", element: <Navigate to="/authentication" replace /> },
       { path: "dashboard", element: <Dashboard /> },
       { path: "create-new-feature-flag", element: <NewFlag /> },
     ],
