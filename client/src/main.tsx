@@ -13,6 +13,8 @@ import { Dashboard } from "./pages/Dashboard.tsx";
 import { NewFlag } from "./pages/NewFlag.tsx";
 import { Register } from "./pages/auth-pages/Register.tsx";
 import { AuthPage } from "./pages/AuthPage.tsx";
+import { ProtectedRoute } from "./components/ProtectedRoutes/ProtectedRoute.tsx";
+import { PublicRoute } from "./components/ProtectedRoutes/PublicRoute.tsx";
 
 const queryClient = new QueryClient();
 
@@ -55,18 +57,18 @@ const router = createBrowserRouter([
     path: "/authentication",
     element: (
       <>
-        {/* <PublicRoute> */}
-        <AuthPage />
-        {/* </PublicRoute> */}
+        <PublicRoute>
+          <AuthPage />
+        </PublicRoute>
       </>
     ),
   },
 
   {
     element: (
-      // <ProtectedRoute>
-      <App />
-      // </ProtectedRoute>
+      <ProtectedRoute>
+        <App />
+      </ProtectedRoute>
     ),
     children: [
       { path: "/", element: <Navigate to="/authentication" replace /> },
