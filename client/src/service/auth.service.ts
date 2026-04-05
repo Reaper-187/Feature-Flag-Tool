@@ -3,7 +3,7 @@ import { api } from "./api";
 const LOGIN_API = import.meta.env.VITE_API_LOGIN;
 const ME_API = import.meta.env.VITE_API_ME;
 const REGISTER_API = import.meta.env.VITE_API_REGISTER;
-// const LOGOUT_API = import.meta.env.VITE_API_LOGOUT;
+const LOGOUT_API = import.meta.env.VITE_API_LOGOUT;
 // const GUEST_ACCESS_API = import.meta.env.VITE_API_GUEST_ACCESS;
 // const FORGOTPW_API = import.meta.env.VITE_API_FORGOTPW;
 // const VERIFYOTP_API = import.meta.env.VITE_API_VERIFYOTP;
@@ -50,6 +50,18 @@ export const fetchMeInfo = async (): Promise<MeInfo> => {
   const response = await api.get<MeInfo>(ME_API, {
     withCredentials: true,
   });
+
+  return response.data;
+};
+
+export const fetchLogout = async () => {
+  const response = await api.post(
+    LOGOUT_API,
+    {},
+    {
+      withCredentials: true,
+    },
+  );
 
   return response.data;
 };

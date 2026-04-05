@@ -12,7 +12,7 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     return <Spinner />;
   }
   if (error) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/authentication" replace />;
   }
 
   if (data) {

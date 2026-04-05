@@ -11,6 +11,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { LogoutButton } from "../Logout/LogoutButton";
 
 export const SidebarSwitcher = () => {
   return (
@@ -33,7 +34,9 @@ export const SidebarSwitcher = () => {
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            <DropdownMenuItem>{/* <LogoutButton /> */}</DropdownMenuItem>
+            <DropdownMenuItem>
+              <LogoutButton />
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
