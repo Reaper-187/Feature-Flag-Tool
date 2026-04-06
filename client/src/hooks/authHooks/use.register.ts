@@ -12,7 +12,7 @@ export const useRegister = () => {
     mutationFn: fetchRegister,
     onSuccess: async (res) => {
       await queryClient.invalidateQueries({ queryKey: ["auth"] });
-      navigate("/authentication");
+      navigate(`/verify-email?email=${encodeURIComponent(res.user_email)}`);
       toast(res.message);
     },
     onError: (err: AxiosError<{ message: string }>) => {

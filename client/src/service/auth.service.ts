@@ -4,9 +4,9 @@ const LOGIN_API = import.meta.env.VITE_API_LOGIN;
 const ME_API = import.meta.env.VITE_API_ME;
 const REGISTER_API = import.meta.env.VITE_API_REGISTER;
 const LOGOUT_API = import.meta.env.VITE_API_LOGOUT;
+const RESEND_EMAIL = import.meta.env.VITE_API_RESEND_EMAIL;
 // const GUEST_ACCESS_API = import.meta.env.VITE_API_GUEST_ACCESS;
 // const FORGOTPW_API = import.meta.env.VITE_API_FORGOTPW;
-// const VERIFYOTP_API = import.meta.env.VITE_API_VERIFYOTP;
 // const RESET_USER_PW_API = import.meta.env.VITE_API_RESETUPW;
 // const CHANGE_PW_API = import.meta.env.VITE_API_CHANGEPW;
 
@@ -30,10 +30,15 @@ export type UserRegisterProps = {
   password: string | undefined;
 };
 
+type ResRegistApiMessage = {
+  user_email: string;
+  message: string;
+};
+
 export const fetchRegister = async (
   data: UserRegisterProps,
-): Promise<ApiMessage> => {
-  const response = await api.post<ApiMessage>(REGISTER_API, data, {
+): Promise<ResRegistApiMessage> => {
+  const response = await api.post<ResRegistApiMessage>(REGISTER_API, data, {
     withCredentials: true,
   });
   return response.data;
@@ -62,6 +67,24 @@ export const fetchLogout = async () => {
       withCredentials: true,
     },
   );
+
+  return response.data;
+};
+
+type ResendVerifyEmailPayload = {
+  email: string;
+};
+
+type ResFromVerifyEmail = {
+  message: string;
+};
+
+export const resendVerifyEmail = async (
+  payload: ResendVerifyEmailPayload,
+): Promise<ResFromVerifyEmail> => {
+  const response = await api.post<ResFromVerifyEmail>(RESEND_EMAIL, payload, {
+    withCredentials: true,
+  });
 
   return response.data;
 };

@@ -7,7 +7,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useResendVerifyEmail } from "@/hooks/authHooks/use.email.resend";
 import { useSearchParams, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 export const EmailVerificationPage = () => {
   const [searchParams] = useSearchParams();
@@ -16,14 +18,16 @@ export const EmailVerificationPage = () => {
   const email = searchParams.get("email");
 
   if (!email) {
-    return (
-      <div className="w-full h-full flex items-center justify-center">
-        <p className="text-sm text-muted-foreground">
-          Invalid access. Please register again.
-        </p>
-      </div>
-    );
+    toast.error("No email provided. Redirecting to login.");
+    navigate("/authentication", { replace: true });
+    return null;
   }
+
+  const { mutate, isPending } = useResendVerifyEmail();
+
+  const handleResendVerifyEmail = (payload: { email: string }) => {
+    mutate(payload);
+  };
 
   return (
     <div className="w-full h-full flex items-center justify-center p-4">
@@ -47,7 +51,13 @@ export const EmailVerificationPage = () => {
 
           <CardDescription>Didn't receive an email?</CardDescription>
 
-          <Button className="w-full">Send again</Button>
+          <Button
+            disabled={isPending}
+            className="w-full"
+            onClick={() => handleResendVerifyEmail({ email })}
+          >
+            {isPending ? "Sending..." : "Send again"}
+          </Button>
         </CardContent>
 
         <CardFooter className="flex flex-col gap-2">
@@ -55,6 +65,7 @@ export const EmailVerificationPage = () => {
             variant="ghost"
             className="w-full"
             onClick={() => navigate("/authentication")}
+            disabled={isPending}
           >
             Back to Login
           </Button>
