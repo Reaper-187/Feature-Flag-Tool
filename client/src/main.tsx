@@ -11,10 +11,11 @@ import { Toaster } from "sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Dashboard } from "./pages/Dashboard.tsx";
 import { NewFlag } from "./pages/NewFlag.tsx";
-import { Register } from "./pages/auth-pages/Register.tsx";
 import { AuthPage } from "./pages/AuthPage.tsx";
 import { ProtectedRoute } from "./components/ProtectedRoutes/ProtectedRoute.tsx";
 import { PublicRoute } from "./components/ProtectedRoutes/PublicRoute.tsx";
+import { EmailVerificationPage } from "./pages/auth-pages/EmailVerificationPage.tsx";
+import { EmailConfirmPage } from "./pages/auth-pages/EmailConfirmPage.tsx";
 
 const queryClient = new QueryClient();
 
@@ -26,14 +27,6 @@ const queryClient = new QueryClient();
 //         <ForgotPw />
 //       </PublicRoute>
 //     </>
-//   ),
-// },
-// {
-//   path: "/multifactor-authentication-oneTimer",
-//   element: (
-//     <PublicRoute>
-//       <OneTimeOtp />
-//     </PublicRoute>
 //   ),
 // },
 // {
@@ -53,6 +46,22 @@ const queryClient = new QueryClient();
 //   ),
 // },
 const router = createBrowserRouter([
+  {
+    path: "/verify-email",
+    element: (
+      <>
+        <EmailVerificationPage />
+      </>
+    ),
+  },
+  {
+    path: "/verify-email/confirm",
+    element: (
+      <>
+        <EmailConfirmPage />
+      </>
+    ),
+  },
   {
     path: "/authentication",
     element: (

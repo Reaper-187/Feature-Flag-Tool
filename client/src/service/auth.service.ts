@@ -5,6 +5,7 @@ const ME_API = import.meta.env.VITE_API_ME;
 const REGISTER_API = import.meta.env.VITE_API_REGISTER;
 const LOGOUT_API = import.meta.env.VITE_API_LOGOUT;
 const RESEND_EMAIL = import.meta.env.VITE_API_RESEND_EMAIL;
+const VERIFY_EMAIL = import.meta.env.VITE_API_VERIFY_EMAIL;
 // const GUEST_ACCESS_API = import.meta.env.VITE_API_GUEST_ACCESS;
 // const FORGOTPW_API = import.meta.env.VITE_API_FORGOTPW;
 // const RESET_USER_PW_API = import.meta.env.VITE_API_RESETUPW;
@@ -85,6 +86,21 @@ export const resendVerifyEmail = async (
   const response = await api.post<ResFromVerifyEmail>(RESEND_EMAIL, payload, {
     withCredentials: true,
   });
+
+  return response.data;
+};
+
+export type EmailVerifyResponse = {
+  success: boolean;
+  message: string;
+};
+
+export const getEmailVerifyConfirm = async (
+  token: string,
+): Promise<EmailVerifyResponse> => {
+  const response = await api.get<EmailVerifyResponse>(
+    `${VERIFY_EMAIL}?token=${token}`,
+  );
 
   return response.data;
 };
