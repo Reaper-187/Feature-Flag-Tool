@@ -72,7 +72,7 @@ export async function registAuth({ name, email, password }: userAuth) {
   return newUser;
 }
 
-export async function emailVerify(token: string) {
+export async function emailVerifyConfirm(token: string) {
   const hashToken = crypto.createHash("sha256").update(token).digest("hex");
 
   const checkToken = await prisma.users.findFirst({

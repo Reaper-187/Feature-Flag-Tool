@@ -3,7 +3,7 @@ import {
   getMeController,
   loginAuthController,
   registAuthController,
-  emailVerifyController,
+  emailVerifyConfirmController,
   resendEmailVerifyController,
   requestPasswordResetController,
   resetPasswordController,
@@ -26,7 +26,7 @@ router.post("/registAuth", registerLimiter, registAuthController);
 
 router.post("/loginAuth", loginLimiter, loginAuthController);
 
-router.get("/verify-email", emailVerifyController);
+router.get("/verify-email/confirm", emailVerifyConfirmController);
 
 router.post(
   "/resend-verification",

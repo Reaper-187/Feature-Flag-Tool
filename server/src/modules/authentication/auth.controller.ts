@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import {
-  emailVerify,
+  emailVerifyConfirm,
   getUser,
   loginAuth,
   logoutUser,
@@ -80,14 +80,17 @@ export const registAuthController = async (req: Request, res: Response) => {
   });
 };
 
-export const emailVerifyController = async (req: Request, res: Response) => {
+export const emailVerifyConfirmController = async (
+  req: Request,
+  res: Response,
+) => {
   const token = req.query.token;
 
   if (!token || typeof token !== "string") {
     throw new AppError("Invalid or missing token", 400);
   }
 
-  await emailVerify(token);
+  await emailVerifyConfirm(token);
 
   return res.status(200).json({
     success: true,

@@ -34,7 +34,7 @@ export async function emailService({
 
   switch (type) {
     case "VERIFY_EMAIL":
-      link = `${FRONTEND_URL}/emailVerify?token=${token}`;
+      link = `${FRONTEND_URL}/verify-email/confirm?token=${token}`;
       subject = "E-Mail Verification";
 
       text = `Please verify your email: ${link}`;
