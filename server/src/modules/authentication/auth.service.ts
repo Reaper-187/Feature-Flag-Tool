@@ -146,7 +146,7 @@ export async function loginAuth(email: string, password: string) {
   }
 
   if (!user.verify_status) {
-    throw new AppError("Invalid email or password", 401);
+    throw new AppError("Email not verified", 403, "EMAIL_NOT_VERIFIED");
   }
 
   if (user.wrong_pw_count > 0) {

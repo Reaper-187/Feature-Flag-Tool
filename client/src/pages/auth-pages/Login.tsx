@@ -8,8 +8,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { useLogin } from "@/hooks/authHooks/use.login";
 // import { guestAccessHook } from "@/hooks/AuthHooks/useGuestAccess";
-// import { useLogin } from "@/hooks/AuthHooks/useLogin";
 import { zodResolver } from "@hookform/resolvers/zod";
+import type { AxiosError } from "axios";
 import { Eye, EyeOff, User } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -28,8 +28,11 @@ type Props = {
 };
 
 export const Login = ({ onSwitch }: Props) => {
-  const navigate = useNavigate();
+  const [showVerifyLink, setShowVerifyLink] = useState(false);
+  const [emailForVerify, setEmailForVerify] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
+
+  const navigate = useNavigate();
 
   const {
     register,
@@ -48,9 +51,18 @@ export const Login = ({ onSwitch }: Props) => {
   const { mutate: userLogin, isPending: loginLoad } = useLogin();
 
   const handleLogin = (data: FormLogin) => {
+    setShowVerifyLink(false);
+
     userLogin(data, {
       onSuccess: () => {
         navigate("/dashboard");
+      },
+      onError: (err) => {
+        const error = err as AxiosError<{ code?: string; message?: string }>;
+        if (error.response?.data?.code === "EMAIL_NOT_VERIFIED") {
+          setShowVerifyLink(true);
+          setEmailForVerify(data.email);
+        }
       },
     });
   };
@@ -96,13 +108,28 @@ export const Login = ({ onSwitch }: Props) => {
               <p className="text-red-600">{errors.password.message}</p>
             )}
           </div>
-          <Link
-            hidden={noCheck ? true : false}
-            className="text-blue-400 hover:text-blue-500 font-medium"
-            to={"/reset-password-authentication"}
-          >
-            forgot password
-          </Link>
+          <div className="flex justify-between">
+            <Link
+              hidden={noCheck ? true : false}
+              className="text-blue-400 hover:text-blue-500 font-medium"
+              to={"/reset-password-authentication"}
+            >
+              forgot password
+            </Link>
+            {showVerifyLink && emailForVerify && (
+              <button
+                type="button"
+                onClick={() =>
+                  navigate(
+                    `/verify-email?email=${encodeURIComponent(emailForVerify)}`,
+                  )
+                }
+                className="text-blue-400 hover:text-blue-500 font-medium"
+              >
+                verify email
+              </button>
+            )}
+          </div>
           <div className="w-full grid grid-cols-2 gap-4">
             <Button disabled={noCheck ? true : false} className="w-full">
               {loginLoad ? "in Progress..." : "Sign in"}
