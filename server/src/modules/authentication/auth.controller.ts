@@ -130,13 +130,13 @@ export const requestPasswordResetController = async (
 
   res.status(200).json({
     success: true,
-    message: "please check your inbox",
+    message: "If an account exists, we sent an email",
   });
 };
 
 export const resetPasswordController = async (req: Request, res: Response) => {
   const token = req.query.token;
-  const { password } = req.body;
+  const { newPassword: password } = req.body;
 
   if (!password || !token || typeof token !== "string") {
     throw new AppError("Invalid or missing credentials", 400);

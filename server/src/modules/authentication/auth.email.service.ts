@@ -45,7 +45,7 @@ export async function emailService({
       break;
 
     case "RESET_PASSWORD":
-      link = `${FRONTEND_URL}/reset-password?token=${token}`;
+      link = `${FRONTEND_URL}/new-password-authentication?token=${token}`;
       subject = "Password Reset";
 
       text = `Reset your password: ${link}`;

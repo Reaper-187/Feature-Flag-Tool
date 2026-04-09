@@ -6,9 +6,9 @@ const REGISTER_API = import.meta.env.VITE_API_REGISTER;
 const LOGOUT_API = import.meta.env.VITE_API_LOGOUT;
 const RESEND_EMAIL = import.meta.env.VITE_API_RESEND_EMAIL;
 const VERIFY_EMAIL = import.meta.env.VITE_API_VERIFY_EMAIL;
+const FORGOTPW_API = import.meta.env.VITE_API_FORGOTPW;
+const RESET_PW = import.meta.env.VITE_API_RESET_PW;
 // const GUEST_ACCESS_API = import.meta.env.VITE_API_GUEST_ACCESS;
-// const FORGOTPW_API = import.meta.env.VITE_API_FORGOTPW;
-// const RESET_USER_PW_API = import.meta.env.VITE_API_RESETUPW;
 // const CHANGE_PW_API = import.meta.env.VITE_API_CHANGEPW;
 
 export type ApiMessage = { message: string; accessToken: string };
@@ -101,6 +101,32 @@ export const getEmailVerifyConfirm = async (
   const response = await api.get<EmailVerifyResponse>(
     `${VERIFY_EMAIL}?token=${token}`,
   );
+
+  return response.data;
+};
+
+export type ForgotPwCred = {
+  email: string;
+  message?: string;
+};
+
+export const forgotPw = async (data: ForgotPwCred): Promise<ForgotPwCred> => {
+  const response = await api.post<ForgotPwCred>(FORGOTPW_API, data, {
+    withCredentials: true,
+  });
+
+  return response.data;
+};
+
+export type ResetPw = {
+  newPassword: string;
+  token: string;
+};
+
+export const resetPw = async (data: ResetPw): Promise<ApiMessage> => {
+  const response = await api.post<ApiMessage>(RESET_PW, data, {
+    withCredentials: true,
+  });
 
   return response.data;
 };

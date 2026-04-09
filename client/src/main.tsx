@@ -16,6 +16,8 @@ import { ProtectedRoute } from "./components/ProtectedRoutes/ProtectedRoute.tsx"
 import { PublicRoute } from "./components/ProtectedRoutes/PublicRoute.tsx";
 import { EmailVerificationPage } from "./pages/auth-pages/EmailVerificationPage.tsx";
 import { EmailConfirmPage } from "./pages/auth-pages/EmailConfirmPage.tsx";
+import { NewPwPage } from "./pages/auth-pages/NewPwPage.tsx";
+import { ForgotPw } from "./pages/auth-pages/ForgotPw.tsx";
 
 const queryClient = new QueryClient();
 
@@ -27,14 +29,6 @@ const queryClient = new QueryClient();
 //         <ForgotPw />
 //       </PublicRoute>
 //     </>
-//   ),
-// },
-// {
-//   path: "/new-password-authentication",
-//   element: (
-//     <PublicRoute>
-//       <NewPwPage />
-//     </PublicRoute>
 //   ),
 // },
 // {
@@ -60,6 +54,22 @@ const router = createBrowserRouter([
       <>
         <EmailConfirmPage />
       </>
+    ),
+  },
+  {
+    path: "/reset-password-authentication",
+    element: (
+      <PublicRoute>
+        <ForgotPw />
+      </PublicRoute>
+    ),
+  },
+  {
+    path: "/new-password-authentication",
+    element: (
+      <PublicRoute>
+        <NewPwPage />
+      </PublicRoute>
     ),
   },
   {
