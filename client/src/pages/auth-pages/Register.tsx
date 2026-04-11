@@ -122,7 +122,10 @@ export const Register = ({ onSwitch }: Props) => {
             {criteriaList.map((criterion, index) => {
               const isMet = Object.values(passwordChecks)[index];
               return (
-                <div className={isMet ? "text-green-500" : "text-gray-500"}>
+                <div
+                  key={index}
+                  className={isMet ? "text-green-500" : "text-gray-500"}
+                >
                   <li className="ml-5">{criterion}</li>
                 </div>
               );

@@ -9,6 +9,7 @@ export const api = axios.create({
 // der interceptor setzt den Auth-Header automatisch hinzu beim Abfragen
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("accessToken");
+
   // Wenn Token existiert => füge ihn in den Auth-Header ein
   if (token && config.headers) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -23,15 +24,27 @@ api.interceptors.response.use(
     // der gecallte req wird gespeichert
     const originalRequest = error.config;
 
+    const token = localStorage.getItem("accessToken");
+
+    // Wenn kein Access Token da ist → kein Refresh Versuch
+    if (!token) {
+      // Fehler wird direkt weitergegeben
+      return Promise.reject(error);
+    }
+
     if (error.response?.status === 401 && !originalRequest._retry) {
       // markiert den req als wiederholt an damit kein loop entsteht
       originalRequest._retry = true;
 
       // call muss mit axios passiere weil wenn api.get mache => interceptor wird immer wieder neu gecallt === loop
-      const res = await axios.get("/refresh-token", {
-        baseURL: import.meta.env.VITE_API_STATIC,
-        withCredentials: true,
-      });
+      const res = await axios.post(
+        "/refresh-token",
+        {},
+        {
+          baseURL: import.meta.env.VITE_API_STATIC,
+          withCredentials: true,
+        },
+      );
 
       const newToken = res.data.accessToken;
 

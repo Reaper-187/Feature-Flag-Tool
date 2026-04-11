@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Register } from "./auth-pages/Register";
 import { Login } from "./auth-pages/Login";
-import BgImg from "../../public/ff-bg.png";
+import BgImg from "@/assets/ff-bg.png";
 import "./flip.css";
 
 export const AuthPage = () => {
