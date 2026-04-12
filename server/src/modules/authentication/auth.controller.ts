@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import {
   emailVerifyConfirm,
   getUser,
+  guestAuthService,
   loginAuth,
   logoutUser,
   refreshAccessToken,
@@ -38,6 +39,22 @@ export const loginAuthController = async (req: Request, res: Response) => {
     success: true,
     user,
     accessToken,
+  });
+};
+
+export const guestAuthController = async (req: Request, res: Response) => {
+  const { accessToken, refreshToken, user } = await guestAuthService();
+
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "strict",
+  });
+
+  return res.status(200).json({
+    success: true,
+    accessToken,
+    user,
   });
 };
 

@@ -3,7 +3,6 @@ import { UserRole } from "../../../generated/prisma/enums";
 import { comparePassword, hashPassword } from "../../utils/hash.utils";
 import { generateToken } from "../../utils/token.utils";
 import { AppError } from "../../utils/appError.utils";
-import crypto from "crypto";
 import { emailService } from "./auth.email.service";
 interface userAuth {
   name: string;
@@ -25,6 +24,7 @@ export async function getUser(user_Id: string) {
     role: user.role,
   };
 }
+
 export async function registAuth({ name, email, password }: userAuth) {
   const isUserRegist = await prisma.users.findUnique({
     where: { user_email: email },
@@ -70,6 +70,54 @@ export async function registAuth({ name, email, password }: userAuth) {
   });
 
   return newUser;
+}
+
+export async function guestAuthService() {
+  const guestId = crypto.randomUUID();
+
+  const guestName = `Guest_${guestId.slice(0, 8)}`;
+  const guestEmail = `guest_${guestId}@guest.com`;
+
+  const user = await prisma.users.create({
+    data: {
+      user_name: guestName,
+      user_email: guestEmail,
+      password_hash: "GUEST",
+      role: UserRole.GUEST,
+    },
+    select: {
+      user_id: true,
+      user_name: true,
+      user_email: true,
+      role: true,
+      created_at: true,
+    },
+  });
+
+  const accessToken = generateToken(user.user_id);
+
+  const rawRefreshToken = crypto.randomBytes(32).toString("hex");
+
+  const hashedRefreshToken = crypto
+    .createHash("sha256")
+    .update(rawRefreshToken)
+    .digest("hex");
+
+  const refreshTokenExp = new Date(Date.now() + 60 * 60 * 1000);
+
+  await prisma.users.update({
+    where: { user_id: user.user_id },
+    data: {
+      refresh_token: hashedRefreshToken,
+      refresh_token_exp: refreshTokenExp,
+    },
+  });
+
+  return {
+    accessToken,
+    refreshToken: rawRefreshToken,
+    user,
+  };
 }
 
 export async function emailVerifyConfirm(token: string) {

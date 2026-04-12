@@ -9,6 +9,7 @@ import {
   resetPasswordController,
   refreshTokenController,
   logoutController,
+  guestAuthController,
 } from "./auth.controller";
 import {
   loginLimiter,
@@ -25,6 +26,8 @@ router.get("/me", tokenAuthCheck, getMeController);
 router.post("/registAuth", registerLimiter, registAuthController);
 
 router.post("/loginAuth", loginLimiter, loginAuthController);
+
+router.post("/guest-login", guestAuthController);
 
 router.get("/verify-email/confirm", emailVerifyConfirmController);
 
