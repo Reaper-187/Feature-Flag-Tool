@@ -4,6 +4,7 @@ import { comparePassword, hashPassword } from "../../utils/hash.utils";
 import { generateToken } from "../../utils/token.utils";
 import { AppError } from "../../utils/appError.utils";
 import { emailService } from "./auth.email.service";
+import crypto from "crypto";
 interface userAuth {
   name: string;
   email: string;
@@ -247,9 +248,6 @@ export async function refreshAccessToken(refreshToken: string) {
   const user = await prisma.users.findFirst({
     where: {
       refresh_token: hashedToken,
-      refresh_token_exp: {
-        gt: new Date(),
-      },
     },
   });
 
@@ -257,6 +255,18 @@ export async function refreshAccessToken(refreshToken: string) {
     throw new AppError("Invalid or expired token", 401);
   }
 
+  const isExpired =
+    !user.refresh_token_exp || user.refresh_token_exp < new Date();
+
+  if (isExpired) {
+    if (user.role === "GUEST") {
+      await prisma.users.delete({
+        where: { user_id: user.user_id },
+      });
+    }
+
+    throw new AppError("Invalid or expired token", 401);
+  }
   const newAccessToken = generateToken(user.user_id);
 
   const rawRefreshToken = crypto.randomBytes(32).toString("hex");
@@ -266,7 +276,10 @@ export async function refreshAccessToken(refreshToken: string) {
     .update(rawRefreshToken)
     .digest("hex");
 
-  const refreshTokenExp = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+  const refreshTokenExp =
+    user.role === "GUEST"
+      ? new Date(Date.now() + 60 * 60 * 1000) // 1h
+      : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 Tage
 
   await prisma.users.update({
     where: { user_id: user.user_id },
@@ -403,10 +416,25 @@ export async function logoutUser(refreshToken: string) {
     .update(refreshToken)
     .digest("hex");
 
-  await prisma.users.updateMany({
-    // nicht update sondern updateMany damit kein error geworfen wird sollte was schieflaufen (sicherer)
+  const user = await prisma.users.findFirst({
     where: {
       refresh_token: hashedToken,
+    },
+  });
+
+  if (!user) return;
+
+  if (user.role === "GUEST") {
+    await prisma.users.delete({
+      where: {
+        user_id: user.user_id,
+      },
+    });
+    return;
+  }
+  await prisma.users.update({
+    where: {
+      user_id: user.user_id,
     },
     data: {
       refresh_token: null,
