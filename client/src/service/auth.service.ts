@@ -8,7 +8,7 @@ const RESEND_EMAIL = import.meta.env.VITE_API_RESEND_EMAIL;
 const VERIFY_EMAIL = import.meta.env.VITE_API_VERIFY_EMAIL;
 const FORGOTPW_API = import.meta.env.VITE_API_FORGOTPW;
 const RESET_PW = import.meta.env.VITE_API_RESET_PW;
-// const GUEST_ACCESS_API = import.meta.env.VITE_API_GUEST_ACCESS;
+const GUEST_ACCESS_API = import.meta.env.VITE_API_GUEST_ACCESS;
 // const CHANGE_PW_API = import.meta.env.VITE_API_CHANGEPW;
 
 export type ApiMessage = { message: string; accessToken: string };
@@ -127,6 +127,18 @@ export const resetPw = async (data: ResetPw): Promise<ApiMessage> => {
   const response = await api.post<ApiMessage>(RESET_PW, data, {
     withCredentials: true,
   });
+
+  return response.data;
+};
+
+export const guestLogin = async () => {
+  const response = await api.post<ApiMessage>(
+    GUEST_ACCESS_API,
+    {},
+    {
+      withCredentials: true,
+    },
+  );
 
   return response.data;
 };

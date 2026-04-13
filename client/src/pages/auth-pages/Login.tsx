@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useLogin } from "@/hooks/authHooks/use.login";
-// import { guestAccessHook } from "@/hooks/AuthHooks/useGuestAccess";
+import { guestAccessHook } from "@/hooks/authHooks/useGuestAccess";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { AxiosError } from "axios";
 import { Eye, EyeOff, User } from "lucide-react";
@@ -46,7 +46,7 @@ export const Login = ({ onSwitch }: Props) => {
     },
   });
 
-  // const { mutate: guestLogin, isPending: guestLoginLoad } = guestAccessHook();
+  const { mutate: guestLogin, isPending: guestLoginLoad } = guestAccessHook();
 
   const { mutate: userLogin, isPending: loginLoad } = useLogin();
 
@@ -67,7 +67,7 @@ export const Login = ({ onSwitch }: Props) => {
     });
   };
 
-  const noCheck = loginLoad;
+  const noCheck = loginLoad || guestLoginLoad;
 
   return (
     <div className="w-full h-full flex items-center justify-center p-4">
@@ -156,13 +156,12 @@ export const Login = ({ onSwitch }: Props) => {
         </form>
         <div className="grid grid-cols-2 gap-4 px-4 ">
           <Button
-            // disabled={noCheck ? true : false}
+            disabled={noCheck ? true : false}
             className="w-full col-span-2 font-semibold"
-            // onClick={() => guestLogin()}
+            onClick={() => guestLogin()}
           >
             <User className="mr-2 h-4 w-4" />
-            {/* {guestLoginLoad ? "Guest-Access is creating..." : "Guest for Test"} */}
-            {"Guest for Test"}
+            {guestLoginLoad ? "Guest-Access is creating..." : "Guest for Test"}
           </Button>
         </div>
       </Card>

@@ -19,5 +19,3 @@ export const useLogin = () => {
     },
   });
 };
-
-// Wenn login fehler weil email nicht verify ist wie ui ändern zu resend email
