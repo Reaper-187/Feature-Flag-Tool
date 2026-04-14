@@ -9,7 +9,6 @@ const VERIFY_EMAIL = import.meta.env.VITE_API_VERIFY_EMAIL;
 const FORGOTPW_API = import.meta.env.VITE_API_FORGOTPW;
 const RESET_PW = import.meta.env.VITE_API_RESET_PW;
 const GUEST_ACCESS_API = import.meta.env.VITE_API_GUEST_ACCESS;
-// const CHANGE_PW_API = import.meta.env.VITE_API_CHANGEPW;
 
 export type ApiMessage = { message: string; accessToken: string };
 
