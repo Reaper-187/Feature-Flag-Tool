@@ -26,6 +26,9 @@ export async function getFlags() {
       (env) => env.environments.name === "prod",
     );
 
+    console.log("dev", dev);
+    console.log("stage", stage);
+    console.log("prod", prod);
     return {
       flagId: flag.flag_id,
       flagName: flag.flag_name,
@@ -56,18 +59,7 @@ export async function createFlag(data: FlagReqData) {
         created_by: data.createdBy,
       },
     });
-
-    const environments = await tx.environments.findMany({
-      where: {
-        name: {
-          in: ["dev", "stage", "prod"],
-        },
-      },
-    });
-
-    if (environments.length !== 3) {
-      throw new Error("Required environments (dev, stage, prod) not found");
-    }
+    const environments = await tx.environments.findMany();
 
     const switchMap = {
       dev: data.devSwitch,
@@ -75,11 +67,17 @@ export async function createFlag(data: FlagReqData) {
       prod: data.prodSwitch,
     };
 
-    const flagEnvironmentData = environments.map((env) => ({
-      flag_id: newFlag.flag_id,
-      environment_id: env.id,
-      is_enabled: switchMap[env.name as keyof typeof switchMap],
-    }));
+    console.log("switchMap", switchMap);
+
+    const flagEnvironmentData = environments
+      .filter((env) => env.name in switchMap)
+      .map((env) => ({
+        flag_id: newFlag.flag_id,
+        environment_id: env.id,
+        is_enabled: switchMap[env.name as keyof typeof switchMap],
+      }));
+
+    console.log("flagEnvironmentData", flagEnvironmentData);
 
     await tx.flag_environments.createMany({
       data: flagEnvironmentData,

@@ -3,10 +3,10 @@ export interface FlagReqData {
   flagKeyName: string;
   description?: string;
   flagRollout: number;
-  createdBy: string;
   devSwitch: boolean;
   stageSwitch: boolean;
   prodSwitch: boolean;
+  createdBy: string;
 }
 
 export interface FlagData {

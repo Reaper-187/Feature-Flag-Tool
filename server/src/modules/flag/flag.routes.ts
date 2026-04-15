@@ -15,7 +15,7 @@ router.get("/getFlags", getFlagsController);
 router.post(
   "/createFlag",
   tokenAuthCheck,
-  roleCheck("ADMIN"),
+  roleCheck("DEV"),
   asyncHandler(createFlagController),
 );
 router.put("/updateFlag", tokenAuthCheck, asyncHandler(updateFlagController));

@@ -6,7 +6,7 @@ export const getFlagsController = async (req: Request, res: Response) => {
   try {
     const fetchedFlags = await getFlags();
 
-    res.status(201).json({
+    res.status(200).json({
       success: true,
       data: fetchedFlags,
       message: "Flag created successfully",
@@ -24,6 +24,17 @@ export const createFlagController = async (req: Request, res: Response) => {
   try {
     const data: FlagReqData = req.body;
 
+    const createdBy = req.user?.user_id;
+    const flagRollout = Number(data.flagRollout);
+
+    if (!createdBy) return;
+
+    const formatedData = {
+      ...data,
+      flagRollout,
+      createdBy,
+    };
+
     if (!data) {
       return res.status(400).json({
         success: false,
@@ -31,7 +42,7 @@ export const createFlagController = async (req: Request, res: Response) => {
       });
     }
 
-    if (!data.flagName || !data.flagKeyName || !data.createdBy) {
+    if (!data.flagName || !data.flagKeyName) {
       return res.status(400).json({
         success: false,
         message: "flagName, flagKeyName and createdBy are required",
@@ -48,11 +59,7 @@ export const createFlagController = async (req: Request, res: Response) => {
       });
     }
 
-    if (
-      typeof data.flagRollout !== "number" ||
-      data.flagRollout < 0 ||
-      data.flagRollout > 100
-    ) {
+    if (flagRollout < 0 || flagRollout > 100) {
       return res.status(400).json({
         success: false,
         message: "flagRollout must be a number between 0 and 100",
@@ -70,7 +77,7 @@ export const createFlagController = async (req: Request, res: Response) => {
       });
     }
 
-    const createdFlag = await createFlag(data);
+    const createdFlag = await createFlag(formatedData);
 
     res.status(201).json({
       success: true,

@@ -19,7 +19,7 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
-app.use("/api", flagRouter);
+app.use("/api/flag", flagRouter);
 app.use("/api/auth", authRouter);
 
 app.use(errorMiddleware);
