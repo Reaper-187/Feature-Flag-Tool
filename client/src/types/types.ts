@@ -4,7 +4,7 @@ export const formSchema = z.object({
   flagName: z.string(),
   flagKeyName: z.string(),
   description: z.string().optional(),
-  flagRollout: z.number().min(0).max(100).array(),
+  flagRollout: z.array(z.number().min(0).max(100)),
   devSwitch: z.boolean(),
   stageSwitch: z.boolean(),
   prodSwitch: z.boolean(),
@@ -31,7 +31,16 @@ export interface FlagData {
   devSwitch: boolean;
   stageSwitch: boolean;
   prodSwitch: boolean;
-
   createdBy: string;
   createdDate: number;
+}
+export interface FormOfNewFlag {
+  flagId?: string;
+  flagName: string;
+  flagKeyName: string;
+  description?: string;
+  flagRollout: number[];
+  devSwitch: boolean;
+  stageSwitch: boolean;
+  prodSwitch: boolean;
 }
