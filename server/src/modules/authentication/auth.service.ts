@@ -95,7 +95,7 @@ export async function guestAuthService() {
     },
   });
 
-  const accessToken = generateToken(user.user_id);
+  const accessToken = generateToken(user.user_id, user.role);
 
   const rawRefreshToken = crypto.randomBytes(32).toString("hex");
 
@@ -207,7 +207,7 @@ export async function loginAuth(email: string, password: string) {
     });
   }
 
-  const accessToken = generateToken(user.user_id);
+  const accessToken = generateToken(user.user_id, user.role);
 
   const refreshToken = crypto.randomBytes(32).toString("hex");
 
@@ -267,7 +267,7 @@ export async function refreshAccessToken(refreshToken: string) {
 
     throw new AppError("Invalid or expired token", 401);
   }
-  const newAccessToken = generateToken(user.user_id);
+  const newAccessToken = generateToken(user.user_id, user.role);
 
   const rawRefreshToken = crypto.randomBytes(32).toString("hex");
 

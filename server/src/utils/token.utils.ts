@@ -7,8 +7,8 @@ if (!jwt_secret) {
   throw new Error("JWT_SECRET is not defined");
 }
 
-export const generateToken = (user_id: string): string => {
-  const payload = { user_id };
+export const generateToken = (user_id: string, role: string): string => {
+  const payload = { user_id, role };
 
   const options: SignOptions = {
     expiresIn: jwt_exp_in as SignOptions["expiresIn"],
