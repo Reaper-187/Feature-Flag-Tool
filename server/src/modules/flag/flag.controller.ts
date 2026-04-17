@@ -164,7 +164,7 @@ export const updateFlagController = async (req: Request, res: Response) => {
 export const deleteFlagController = async (req: Request, res: Response) => {
   try {
     //akt. test --- später auf req.params wechsel weil id soll über url gehen nicht body ----
-    const { flagId: flag_id } = req.body;
+    const { flagId: flag_id } = req.params;
 
     if (
       !flag_id ||

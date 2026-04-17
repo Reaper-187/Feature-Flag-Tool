@@ -12,17 +12,20 @@ import { asyncHandler } from "../../utils/asyncHandler.utils";
 const router = Router();
 
 router.get("/getFlags", getFlagsController);
+
 router.post(
   "/createFlag",
   tokenAuthCheck,
   roleCheck("DEV"),
   asyncHandler(createFlagController),
 );
+
 router.put("/updateFlag", tokenAuthCheck, asyncHandler(updateFlagController));
+
 router.delete(
-  "/deleteFlag",
+  `/deleteFlag/:flagId`,
   tokenAuthCheck,
-  roleCheck("ADMIN"),
+  roleCheck("DEV"),
   asyncHandler(deleteFlagController),
 );
 

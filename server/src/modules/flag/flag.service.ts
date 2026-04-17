@@ -26,9 +26,6 @@ export async function getFlags() {
       (env) => env.environments.name === "prod",
     );
 
-    console.log("dev", dev);
-    console.log("stage", stage);
-    console.log("prod", prod);
     return {
       flagId: flag.flag_id,
       flagName: flag.flag_name,
