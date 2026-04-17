@@ -7,6 +7,7 @@ interface FlagInfo {
   createdBy: string;
   createdDate: number;
   openEditAlert: (flagId: string) => void;
+  handleDelete: (flagId: string) => void;
 }
 
 export const FlagInfoComp = ({
@@ -15,6 +16,7 @@ export const FlagInfoComp = ({
   createdBy,
   createdDate,
   openEditAlert,
+  handleDelete,
 }: FlagInfo) => {
   return (
     <div key={flagId}>
@@ -27,7 +29,7 @@ export const FlagInfoComp = ({
           items={[
             {
               label: "Delete",
-              /*onClick: () => handleDelete(),*/
+              onClick: () => handleDelete(flagId),
               separator: true,
             },
             {

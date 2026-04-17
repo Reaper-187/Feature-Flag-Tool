@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 export const NewFlag = () => {
   const { mutate } = useCreateFlag();
+
   const navigate = useNavigate();
   const handleCreate = (data: FormOfNewFlag) => {
     mutate(data, {

@@ -8,9 +8,15 @@ interface FlagListProps {
     field: "devSwitch" | "stageSwitch" | "prodSwitch",
   ) => void;
   onEdit: (flagId: string) => void;
+  onDelete: (flagId: string) => void;
 }
 
-export const FlagList = ({ flags, onToggleSwitch, onEdit }: FlagListProps) => {
+export const FlagList = ({
+  flags,
+  onToggleSwitch,
+  onEdit,
+  onDelete,
+}: FlagListProps) => {
   if (flags.length === 0) {
     return (
       <div className="text-center text-gray-500 mt-10">No flags found</div>
@@ -25,6 +31,7 @@ export const FlagList = ({ flags, onToggleSwitch, onEdit }: FlagListProps) => {
           data={flag}
           switchToggle={onToggleSwitch}
           editAlert={onEdit}
+          deleteFlag={onDelete}
         />
       ))}
     </>

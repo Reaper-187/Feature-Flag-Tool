@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import type { FlagData } from "@/types/types";
 import { getChangedFlags } from "@/utils/getChangedFlag";
+import { useDeleteFlag } from "./use.deleteFlag";
+import { toast } from "sonner";
 
 export const useFlagManagement = (fetchedFlags: FlagData[] | undefined) => {
   const [serverFlags, setServerFlags] = useState<FlagData[]>(
@@ -48,6 +50,11 @@ export const useFlagManagement = (fetchedFlags: FlagData[] | undefined) => {
 
   const isDirty = JSON.stringify(serverFlags) !== JSON.stringify(editableFlags);
 
+  const { mutate } = useDeleteFlag();
+  const handleDeleteReq = (flagId: string) => {
+    mutate(flagId);
+  };
+
   return {
     serverFlags,
     editableFlags,
@@ -59,5 +66,6 @@ export const useFlagManagement = (fetchedFlags: FlagData[] | undefined) => {
     handleSaveChanges,
     handleOpenEdit,
     isDirty,
+    handleDeleteReq,
   };
 };

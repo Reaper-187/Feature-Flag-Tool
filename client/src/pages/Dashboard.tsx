@@ -11,7 +11,6 @@ import { useFlagFilters } from "@/hooks/flagHooks/useFlagFilters";
 
 export const Dashboard = () => {
   const { data: fetchedFlags, isLoading, error } = useFetchFlag();
-
   const {
     serverFlags,
     editableFlags,
@@ -22,6 +21,7 @@ export const Dashboard = () => {
     handleSaveChanges,
     handleOpenEdit,
     isDirty,
+    handleDeleteReq,
   } = useFlagManagement(fetchedFlags);
 
   const { handleSearch, handleFilter, handleSort, resetFilters } =
@@ -48,6 +48,7 @@ export const Dashboard = () => {
         flags={editableFlags}
         onToggleSwitch={handleToggleSwitch}
         onEdit={handleOpenEdit}
+        onDelete={handleDeleteReq}
       />
 
       <EditDialog
