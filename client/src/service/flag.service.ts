@@ -32,3 +32,18 @@ export const deleteFlag = async (flagId: string) => {
   });
   return response.data;
 };
+
+export const updateFlag = async ({
+  flagId,
+  ...data
+  // das & ist eine combi von zwei Obj-Typen
+}: FormOfNewFlag & { flagId: string }): Promise<FormOfNewFlag> => {
+  const response = await api.put<FormOfNewFlag>(
+    `${UPDATE_FLAG}/${flagId}`,
+    data,
+    {
+      withCredentials: true,
+    },
+  );
+  return response.data;
+};

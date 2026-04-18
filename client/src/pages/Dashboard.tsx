@@ -1,7 +1,7 @@
 // Dashboard.tsx (final)
 import { EditDialog } from "@/components/edit-dialog/EditDialog";
 import { Button } from "@/components/ui/button";
-import { useFetchFlag } from "@/hooks/flagHooks/use.fetchFlag";
+import { useFetchFlags } from "@/hooks/flagHooks/use.fetchFlag";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { DashboardFilters } from "@/components/dashboard/DashboardFilters";
 import { EnvironmentIndicators } from "@/components/dashboard/EnvironmentIndicators";
@@ -10,7 +10,7 @@ import { useFlagManagement } from "@/hooks/flagHooks/useFlagManagement";
 import { useFlagFilters } from "@/hooks/flagHooks/useFlagFilters";
 
 export const Dashboard = () => {
-  const { data: fetchedFlags, isLoading, error } = useFetchFlag();
+  const { data: fetchedFlags, isLoading, error } = useFetchFlags();
   const {
     serverFlags,
     editableFlags,

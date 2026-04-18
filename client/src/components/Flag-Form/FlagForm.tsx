@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
 import { Separator } from "@/components/ui/separator";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -27,23 +26,15 @@ export const FlagForm = ({ mode, initialValues, onSubmit }: FlagFormProps) => {
     reset,
   } = useForm<FormOfNewFlag>({
     resolver: zodResolver(formSchema),
-    defaultValues:
-      mode === "create"
-        ? {
-            flagRollout: [0],
-            devSwitch: false,
-            stageSwitch: false,
-            prodSwitch: false,
-          }
-        : {
-            flagRollout: initialValues?.flagRollout ?? [0],
-            flagName: initialValues?.flagName ?? "",
-            flagKeyName: initialValues?.flagKeyName ?? "",
-            description: initialValues?.description ?? "",
-            devSwitch: initialValues?.devSwitch ?? false,
-            stageSwitch: initialValues?.stageSwitch ?? false,
-            prodSwitch: initialValues?.prodSwitch ?? false,
-          },
+    defaultValues: initialValues || {
+      flagRollout: [0],
+      devSwitch: false,
+      stageSwitch: false,
+      prodSwitch: false,
+      flagName: "",
+      flagKeyName: "",
+      description: "",
+    },
   });
 
   useEffect(() => {
