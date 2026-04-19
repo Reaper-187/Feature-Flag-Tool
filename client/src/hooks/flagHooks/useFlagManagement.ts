@@ -2,17 +2,16 @@ import { useState, useEffect } from "react";
 import type { FlagData } from "@/types/types";
 import { getChangedFlags } from "@/utils/getChangedFlag";
 import { useDeleteFlag } from "./use.deleteFlag";
-import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 export const useFlagManagement = (fetchedFlags: FlagData[] | undefined) => {
+  const navigate = useNavigate();
   const [serverFlags, setServerFlags] = useState<FlagData[]>(
     fetchedFlags || [],
   );
   const [editableFlags, setEditableFlags] = useState<FlagData[]>(
     fetchedFlags || [],
   );
-  const [showEditAlert, setShowEditAlert] = useState(false);
-  const [selectedFlag, setSelectedFlag] = useState<FlagData | null>(null);
 
   useEffect(() => {
     if (fetchedFlags) {
@@ -42,30 +41,28 @@ export const useFlagManagement = (fetchedFlags: FlagData[] | undefined) => {
     return changes;
   };
 
-  const handleOpenEdit = (flagId: string) => {
-    const flag = serverFlags.find((flag) => flag.flagId === flagId);
-    setShowEditAlert(true);
-    setSelectedFlag(flag ?? null);
+  const handleEdit = (flagId: string) => {
+    navigate(`/flags/${flagId}/edit`);
   };
 
   const isDirty = JSON.stringify(serverFlags) !== JSON.stringify(editableFlags);
 
-  const { mutate } = useDeleteFlag();
+  const { mutate: deleteFlag } = useDeleteFlag();
+
   const handleDeleteReq = (flagId: string) => {
-    mutate(flagId);
+    if (confirm("Are you sure you want to delete this flag?")) {
+      deleteFlag(flagId);
+    }
   };
 
   return {
+    isDirty,
     serverFlags,
     editableFlags,
     setServerFlags,
-    showEditAlert,
-    setShowEditAlert,
-    selectedFlag,
-    handleToggleSwitch,
-    handleSaveChanges,
-    handleOpenEdit,
-    isDirty,
     handleDeleteReq,
+    handleSaveChanges,
+    handleToggleSwitch,
+    handleEdit,
   };
 };

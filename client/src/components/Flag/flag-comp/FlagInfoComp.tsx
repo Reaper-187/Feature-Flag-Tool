@@ -6,7 +6,7 @@ interface FlagInfo {
   flagName: string;
   createdBy: string;
   createdDate: number;
-  openEditAlert: (flagId: string) => void;
+  openEditFrom: (flagId: string) => void;
   handleDelete: (flagId: string) => void;
 }
 
@@ -15,14 +15,14 @@ export const FlagInfoComp = ({
   flagName,
   createdBy,
   createdDate,
-  openEditAlert,
+  openEditFrom,
   handleDelete,
 }: FlagInfo) => {
   return (
     <div key={flagId}>
       <h3 className="font-bold">{flagName}</h3>
       <div className="grid grid-cols-[120px_100px_80px_auto] gap-3 items-center text-xs text-gray-400">
-        <p className="truncate">{createdBy}</p>
+        <p className="truncate">user: {createdBy}</p>
         <p>{createdDate}</p>
         <AppDropdown
           triggerIcon={Icons.Pencil}
@@ -34,7 +34,7 @@ export const FlagInfoComp = ({
             },
             {
               label: "Edit",
-              onClick: () => openEditAlert(flagId),
+              onClick: () => openEditFrom(flagId),
               separator: true,
             },
             {

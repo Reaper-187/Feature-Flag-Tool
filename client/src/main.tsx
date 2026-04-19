@@ -93,6 +93,7 @@ const router = createBrowserRouter([
       { path: "/", element: <Navigate to="/authentication" replace /> },
       { path: "dashboard", element: <Dashboard /> },
       { path: "create-new-feature-flag", element: <NewFlag /> },
+      { path: "flags/:flagId/edit", element: <NewFlag /> },
     ],
   },
 ]);

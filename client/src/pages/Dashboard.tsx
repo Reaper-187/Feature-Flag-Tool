@@ -1,5 +1,3 @@
-// Dashboard.tsx (final)
-import { EditDialog } from "@/components/edit-dialog/EditDialog";
 import { Button } from "@/components/ui/button";
 import { useFetchFlags } from "@/hooks/flagHooks/use.fetchFlag";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
@@ -14,14 +12,11 @@ export const Dashboard = () => {
   const {
     serverFlags,
     editableFlags,
-    showEditAlert,
-    setShowEditAlert,
-    selectedFlag,
     handleToggleSwitch,
     handleSaveChanges,
-    handleOpenEdit,
     isDirty,
     handleDeleteReq,
+    handleEdit,
   } = useFlagManagement(fetchedFlags);
 
   const { handleSearch, handleFilter, handleSort, resetFilters } =
@@ -47,15 +42,8 @@ export const Dashboard = () => {
       <FlagList
         flags={editableFlags}
         onToggleSwitch={handleToggleSwitch}
-        onEdit={handleOpenEdit}
+        onEdit={handleEdit}
         onDelete={handleDeleteReq}
-      />
-
-      <EditDialog
-        showEditAlert={showEditAlert}
-        closeAlert={setShowEditAlert}
-        editFlagData={selectedFlag}
-        editSubmit={(data) => console.log("Edit:", data)}
       />
 
       <Button

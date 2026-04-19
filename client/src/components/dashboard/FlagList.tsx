@@ -30,7 +30,7 @@ export const FlagList = ({
           key={flag.flagId}
           data={flag}
           switchToggle={onToggleSwitch}
-          editAlert={onEdit}
+          openEdit={onEdit}
           deleteFlag={onDelete}
         />
       ))}

@@ -59,10 +59,7 @@ export const FlagForm = ({ mode, initialValues, onSubmit }: FlagFormProps) => {
   };
 
   return (
-    <form
-      className={mode === "create" ? "p-5" : ""}
-      onSubmit={handleSubmit(onSubmit)}
-    >
+    <form className="p-5" onSubmit={handleSubmit(onSubmit)}>
       <h1 className="text-md font-bold md:my-5 md:text-xl">
         {mode === "create" ? "Create a feature flag" : "Edit feature flag"}
       </h1>
