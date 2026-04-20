@@ -18,3 +18,12 @@ export interface FlagData {
   stageSwitch: boolean;
   prodSwitch: boolean;
 }
+
+export interface FlagUpdateData {
+  flag_name: string;
+  flag_rollout: number;
+  description?: string;
+  devSwitch: boolean;
+  stageSwitch: boolean;
+  prodSwitch: boolean;
+}

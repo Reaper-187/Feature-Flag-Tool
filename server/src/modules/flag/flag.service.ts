@@ -1,5 +1,5 @@
 import prisma from "../../lib/prisma";
-import { FlagData, FlagReqData } from "../../types/types";
+import { FlagData, FlagReqData, FlagUpdateData } from "../../types/types";
 import { AppError } from "../../utils/appError.utils";
 
 export async function getFlags() {
@@ -64,8 +64,6 @@ export async function createFlag(data: FlagReqData) {
       prod: data.prodSwitch,
     };
 
-    console.log("switchMap", switchMap);
-
     const flagEnvironmentData = environments
       .filter((env) => env.name in switchMap)
       .map((env) => ({
@@ -74,8 +72,6 @@ export async function createFlag(data: FlagReqData) {
         is_enabled: switchMap[env.name as keyof typeof switchMap],
       }));
 
-    console.log("flagEnvironmentData", flagEnvironmentData);
-
     await tx.flag_environments.createMany({
       data: flagEnvironmentData,
     });
@@ -83,10 +79,10 @@ export async function createFlag(data: FlagReqData) {
   });
 }
 
-export async function updateFlag(data: FlagData) {
+export async function updateFlag(flag_id: string, data: FlagUpdateData) {
   return await prisma.$transaction(async (tx) => {
     const updatedFlag = await tx.flags.update({
-      where: { flag_id: data.flag_id },
+      where: { flag_id: flag_id },
       data: {
         flag_name: data.flag_name,
         flag_rollout: data.flag_rollout,
@@ -94,34 +90,33 @@ export async function updateFlag(data: FlagData) {
       },
     });
 
-    const switchMapping = [
-      { envName: "dev", enabled: data.devSwitch },
-      { envName: "stage", enabled: data.stageSwitch },
-      { envName: "prod", enabled: data.prodSwitch },
-    ];
+    const environments = await tx.environments.findMany();
 
-    const environments = await tx.environments.findMany({
-      where: {
-        name: { in: switchMapping.map((e) => e.envName) },
-      },
-    });
+    const switchMap = {
+      dev: data.devSwitch,
+      stage: data.stageSwitch,
+      prod: data.prodSwitch,
+    };
 
     for (const env of environments) {
-      const match = switchMapping.find((e) => e.envName === env.name);
-      if (!match) continue;
-
-      await tx.flag_environments.update({
-        where: {
-          // zusammengesetzter Primary-key
-          flag_id_environment_id: {
-            flag_id: data.flag_id,
-            environment_id: env.id,
+      if (env.name in switchMap) {
+        await tx.flag_environments.upsert({
+          where: {
+            flag_id_environment_id: {
+              flag_id: flag_id,
+              environment_id: env.id,
+            },
           },
-        },
-        data: {
-          is_enabled: match.enabled,
-        },
-      });
+          update: {
+            is_enabled: switchMap[env.name as keyof typeof switchMap],
+          },
+          create: {
+            flag_id: flag_id,
+            environment_id: env.id,
+            is_enabled: switchMap[env.name as keyof typeof switchMap],
+          },
+        });
+      }
     }
 
     return updatedFlag;

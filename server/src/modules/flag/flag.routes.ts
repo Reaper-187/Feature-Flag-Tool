@@ -20,7 +20,11 @@ router.post(
   asyncHandler(createFlagController),
 );
 
-router.put("/updateFlag", tokenAuthCheck, asyncHandler(updateFlagController));
+router.put(
+  "/updateFlag/:flagId",
+  tokenAuthCheck,
+  asyncHandler(updateFlagController),
+);
 
 router.delete(
   `/deleteFlag/:flagId`,

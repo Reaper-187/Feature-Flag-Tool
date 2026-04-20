@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { createFlag, deleteFlag, getFlags, updateFlag } from "./flag.service";
-import { FlagData, FlagReqData } from "../../types/types";
+import { FlagData, FlagReqData, FlagUpdateData } from "../../types/types";
 
 export const getFlagsController = async (req: Request, res: Response) => {
   try {
@@ -97,7 +97,6 @@ export const createFlagController = async (req: Request, res: Response) => {
 export const updateFlagController = async (req: Request, res: Response) => {
   try {
     const {
-      flagId,
       flagName,
       flagRollout,
       description,
@@ -106,18 +105,16 @@ export const updateFlagController = async (req: Request, res: Response) => {
       prodSwitch,
     } = req.body;
 
-    if (!flagId || !flagName || flagRollout === undefined) {
+    const { flagId: flag_id } = req.params;
+
+    if (!flagName || flagRollout === undefined) {
       return res.status(400).json({
         success: false,
         message: "flagId, flagName and flagRollout are required",
       });
     }
-
-    if (
-      typeof flagRollout !== "number" ||
-      flagRollout < 0 ||
-      flagRollout > 100
-    ) {
+    const formatedRollout = Number(flagRollout);
+    if (formatedRollout < 0 || formatedRollout > 100) {
       return res.status(400).json({
         success: false,
         message: "flagRollout must be a number between 0 and 100",
@@ -135,17 +132,16 @@ export const updateFlagController = async (req: Request, res: Response) => {
       });
     }
 
-    const convertedData: FlagData = {
-      flag_id: flagId,
+    const convertedData: FlagUpdateData = {
       flag_name: flagName,
-      flag_rollout: flagRollout,
+      flag_rollout: formatedRollout,
       description,
       devSwitch,
       stageSwitch,
       prodSwitch,
     };
 
-    const updatedFlag = await updateFlag(convertedData);
+    const updatedFlag = await updateFlag(flag_id as string, convertedData);
 
     res.status(200).json({
       success: true,
