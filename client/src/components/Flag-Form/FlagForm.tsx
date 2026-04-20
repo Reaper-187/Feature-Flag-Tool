@@ -138,9 +138,8 @@ export const FlagForm = ({ mode, initialValues, onSubmit }: FlagFormProps) => {
         </div>
 
         <Separator className="my-5"></Separator>
-        <div className="flex gap-2 w-1/2 ">
-          <div className="w-full flex items-center p-1 text-md justify-between">
-            <p className="text-black">Development</p>
+        <div className="flex w-1/2 ">
+          <div className="w-full flex items-center p-1 text-md">
             <Controller
               control={control}
               name="devSwitch"
@@ -151,9 +150,9 @@ export const FlagForm = ({ mode, initialValues, onSubmit }: FlagFormProps) => {
                 />
               )}
             />
+            <p className="text-black px-5">Development</p>
           </div>
-          <div className="w-full flex items-center p-1 text-md justify-between">
-            <p className="text-black">Staging</p>
+          <div className="w-full flex items-center p-1 text-md">
             <Controller
               control={control}
               name="stageSwitch"
@@ -164,9 +163,9 @@ export const FlagForm = ({ mode, initialValues, onSubmit }: FlagFormProps) => {
                 />
               )}
             />
+            <p className="text-black px-5">Staging</p>
           </div>
-          <div className="w-full flex items-center p-1 text-md justify-between">
-            <p className="text-black">Production</p>
+          <div className="w-full flex items-center p-1 text-md">
             <Controller
               control={control}
               name="prodSwitch"
@@ -177,6 +176,7 @@ export const FlagForm = ({ mode, initialValues, onSubmit }: FlagFormProps) => {
                 />
               )}
             />
+            <p className="text-black px-5">Production</p>
           </div>
         </div>
       </div>

@@ -37,10 +37,6 @@ export const FlagInfoComp = ({
               onClick: () => openEditFrom(flagId),
               separator: true,
             },
-            {
-              label: "Hide",
-              /*onClick: () => handleHide(),*/
-            },
           ]}
         />
       </div>
