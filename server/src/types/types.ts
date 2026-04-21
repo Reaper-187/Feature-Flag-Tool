@@ -27,3 +27,11 @@ export interface FlagUpdateData {
   stageSwitch: boolean;
   prodSwitch: boolean;
 }
+interface SwitchUpdate {
+  flagId: string;
+  devSwitch?: boolean;
+  stageSwitch?: boolean;
+  prodSwitch?: boolean;
+}
+
+export type SwitchUpdates = SwitchUpdate[];

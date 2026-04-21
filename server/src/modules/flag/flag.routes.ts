@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  batchUpdateSwitchesController,
   createFlagController,
   deleteFlagController,
   getFlagsController,
@@ -24,6 +25,13 @@ router.put(
   "/updateFlag/:flagId",
   tokenAuthCheck,
   asyncHandler(updateFlagController),
+);
+
+router.patch(
+  "/patch-flag-swtiches",
+  tokenAuthCheck,
+  roleCheck("DEV"),
+  asyncHandler(batchUpdateSwitchesController),
 );
 
 router.delete(

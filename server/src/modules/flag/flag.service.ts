@@ -1,5 +1,10 @@
 import prisma from "../../lib/prisma";
-import { FlagData, FlagReqData, FlagUpdateData } from "../../types/types";
+import {
+  FlagData,
+  FlagReqData,
+  FlagUpdateData,
+  SwitchUpdates,
+} from "../../types/types";
 import { AppError } from "../../utils/appError.utils";
 
 export async function getFlags() {
@@ -120,6 +125,61 @@ export async function updateFlag(flag_id: string, data: FlagUpdateData) {
     }
 
     return updatedFlag;
+  });
+}
+
+export async function batchUpdateSwitches(changes: SwitchUpdates) {
+  return await prisma.$transaction(async (tx) => {
+    const results = [];
+
+    for (const change of changes) {
+      const existingFlag = await tx.flags.findUnique({
+        where: { flag_id: change.flagId },
+      });
+
+      if (!existingFlag) {
+        throw new Error(`Flag with ID ${change.flagId} not found`);
+      }
+
+      const environments = await tx.environments.findMany();
+
+      const switchMap = {
+        dev: change.devSwitch,
+        stage: change.stageSwitch,
+        prod: change.prodSwitch,
+      };
+
+      // Für jedes env den connect updaten/erstellen
+      for (const env of environments) {
+        // Nur updaten wenn der Switch im req geg. ist
+        if (
+          env.name in switchMap &&
+          switchMap[env.name as keyof typeof switchMap] !== undefined
+        ) {
+          const updatedEnv = await tx.flag_environments.update({
+            where: {
+              flag_id_environment_id: {
+                flag_id: change.flagId,
+                environment_id: env.id,
+              },
+            },
+            data: {
+              is_enabled: switchMap[
+                env.name as keyof typeof switchMap
+              ] as boolean,
+            },
+          });
+
+          results.push({
+            flagId: change.flagId,
+            environment: env.name,
+            is_enabled: updatedEnv.is_enabled,
+          });
+        }
+      }
+    }
+
+    return results;
   });
 }
 

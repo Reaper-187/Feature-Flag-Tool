@@ -1,6 +1,17 @@
 import { Request, Response } from "express";
-import { createFlag, deleteFlag, getFlags, updateFlag } from "./flag.service";
-import { FlagData, FlagReqData, FlagUpdateData } from "../../types/types";
+import {
+  batchUpdateSwitches,
+  createFlag,
+  deleteFlag,
+  getFlags,
+  updateFlag,
+} from "./flag.service";
+import {
+  FlagData,
+  FlagReqData,
+  FlagUpdateData,
+  SwitchUpdates,
+} from "../../types/types";
 
 export const getFlagsController = async (req: Request, res: Response) => {
   try {
@@ -150,6 +161,36 @@ export const updateFlagController = async (req: Request, res: Response) => {
     });
   } catch (err) {
     console.error("Error updating flag:", err);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
+
+export const batchUpdateSwitchesController = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    const changes: SwitchUpdates = req.body;
+
+    if (!changes || !Array.isArray(changes) || changes.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Changes array is required",
+      });
+    }
+
+    const results = await batchUpdateSwitches(changes);
+
+    res.status(200).json({
+      success: true,
+      data: results,
+      message: `${results.length} switches updated successfully`,
+    });
+  } catch (err) {
+    console.error("Error in batch update:", err);
     res.status(500).json({
       success: false,
       message: "Internal server error",
