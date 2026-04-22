@@ -5,6 +5,7 @@ const FETCH_FLAG = import.meta.env.VITE_API_FETCH_FLAG;
 const CREATE_FLAG = import.meta.env.VITE_API_CREATE_FLAG;
 const DELETE_FLAG = import.meta.env.VITE_API_DELETE_FLAG;
 const UPDATE_FLAG = import.meta.env.VITE_API_UPDATE_FLAG;
+const BATCH_UPDATE_SWITCHES = import.meta.env.VITE_API_BATCH_UPDATE_SWITCHES;
 
 export const fetchFlag = async (): Promise<FlagData[]> => {
   const response = await api.get<{ success: boolean; data: FlagData[] }>(
@@ -45,5 +46,21 @@ export const updateFlag = async ({
       withCredentials: true,
     },
   );
+  return response.data;
+};
+
+export interface QuickChangeSwitches {
+  flagId: string;
+  devSwitch?: boolean;
+  stageSwitch?: boolean;
+  prodSwitch?: boolean;
+}
+
+export const batchUpdateSwitches = async (
+  changes: QuickChangeSwitches[],
+): Promise<void> => {
+  const response = await api.patch(BATCH_UPDATE_SWITCHES, changes, {
+    withCredentials: true,
+  });
   return response.data;
 };
