@@ -29,6 +29,14 @@ export const Flag = ({
   openEdit,
   deleteFlag,
 }: FlagProps) => {
+  const getStatusStyle = (isActive: boolean) => {
+    if (isActive) {
+      return "bg-green-200 text-green-800 border-green-300 py-1 px-2 rounded-md";
+    } else {
+      return "bg-red-200 text-red-800 border-red-300 py-1 px-2 rounded-md";
+    }
+  };
+
   return (
     <>
       <div>
@@ -43,15 +51,23 @@ export const Flag = ({
               handleDelete={deleteFlag}
             />
             <div className="flex gap-2 w-1/2 ">
-              <div className="w-full flex items-center p-1 text-xs justify-between">
-                <p className="text-gray-400">Evaluated X days ago</p>
+              <div className="w-full flex items-center p-1 text-sm justify-between">
+                <p
+                  className={`${getStatusStyle(data.devSwitch)} font-medium text-sm`}
+                >
+                  {data.devSwitch ? "active" : "inactive"}
+                </p>
                 <Switch
                   checked={data.devSwitch}
                   onCheckedChange={() => switchToggle(data.flagId, "devSwitch")}
                 />
               </div>
-              <div className="w-full flex items-center p-1 text-xs justify-between">
-                <p className="text-gray-400">Evaluated X days ago</p>
+              <div className="w-full flex items-center p-1 text-sm justify-between">
+                <p
+                  className={`${getStatusStyle(data.stageSwitch)} font-medium text-sm`}
+                >
+                  {data.stageSwitch ? "active" : "inactive"}
+                </p>
                 <Switch
                   checked={data.stageSwitch}
                   onCheckedChange={() =>
@@ -59,8 +75,12 @@ export const Flag = ({
                   }
                 />
               </div>
-              <div className="w-full flex items-center p-1 text-xs justify-between">
-                <p className="text-gray-400">Evaluated X days ago</p>
+              <div className="w-full flex items-center p-1 text-sm justify-between">
+                <p
+                  className={`${getStatusStyle(data.prodSwitch)} font-medium text-sm`}
+                >
+                  {data.prodSwitch ? "active" : "inactive"}
+                </p>
                 <Switch
                   checked={data.prodSwitch}
                   onCheckedChange={() =>

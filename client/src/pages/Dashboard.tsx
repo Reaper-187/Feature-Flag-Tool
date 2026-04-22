@@ -48,7 +48,7 @@ export const Dashboard = () => {
 
       <Button
         onClick={handleSaveChanges}
-        className={isDirty ? "block" : "hidden"}
+        className={isDirty ? "block m-2 float-right" : "hidden"}
       >
         Save changes
       </Button>

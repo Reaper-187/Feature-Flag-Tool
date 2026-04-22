@@ -23,7 +23,13 @@ export const FlagInfoComp = ({
       <h3 className="font-bold">{flagName}</h3>
       <div className="grid grid-cols-[120px_100px_80px_auto] gap-3 items-center text-xs text-gray-400">
         <p className="truncate">user: {createdBy}</p>
-        <p>{createdDate}</p>
+        <p>
+          {new Date(createdDate).toLocaleDateString("de-DE", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+          })}
+        </p>
         <AppDropdown
           triggerIcon={Icons.Pencil}
           items={[
