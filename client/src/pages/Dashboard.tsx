@@ -10,7 +10,6 @@ import { useFlagFilters } from "@/hooks/flagHooks/useFlagFilters";
 export const Dashboard = () => {
   const { data: fetchedFlags, isLoading, error } = useFetchFlags();
   const {
-    serverFlags,
     editableFlags,
     handleToggleSwitch,
     handleSaveChanges,
@@ -19,8 +18,13 @@ export const Dashboard = () => {
     handleEdit,
   } = useFlagManagement(fetchedFlags);
 
-  const { handleSearch, handleFilter, handleSort, resetFilters } =
-    useFlagFilters(serverFlags);
+  const {
+    filteredFlags,
+    handleSearch,
+    handleFilter,
+    handleSort,
+    resetFilters,
+  } = useFlagFilters(editableFlags);
 
   if (isLoading) return <div>Loading flags...</div>;
   if (error) return <div>Error loading flags: {error.message}</div>;
@@ -40,7 +44,7 @@ export const Dashboard = () => {
       </div>
 
       <FlagList
-        flags={editableFlags}
+        flags={filteredFlags}
         onToggleSwitch={handleToggleSwitch}
         onEdit={handleEdit}
         onDelete={handleDeleteReq}

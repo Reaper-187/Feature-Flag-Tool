@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { FlagData } from "@/types/types";
 import { filterFlagsBySearch, filterFlagsByType } from "@/utils/flagFilters";
 import { sortFlags } from "@/utils/flagSorters";
@@ -8,6 +8,10 @@ export const useFlagFilters = (initialFlags: FlagData[]) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeFilter, setActiveFilter] = useState("");
   const [activeSort, setActiveSort] = useState("");
+
+  useEffect(() => {
+    applyFilters(initialFlags, searchTerm, activeFilter, activeSort);
+  }, [initialFlags]);
 
   const applyFilters = (
     flags: FlagData[],

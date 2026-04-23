@@ -16,42 +16,41 @@ export const DashboardFilters = ({
   onSort,
   onReset,
 }: DashboardFiltersProps) => {
-  const handleFilterClick = (filterValue: string) => {
-    if (filterValue === "") {
-      onReset();
-    } else {
-      onFilter(filterValue);
-    }
-  };
-
-  const handleSortClick = (sortValue: string) => {
-    if (sortValue === "") {
-      onReset();
-    } else {
-      onSort(sortValue);
-    }
-  };
-
   return (
     <div className="flex gap-10 items-center text-sm">
       <div className="flex gap-3">
         <AppDropdown
           triggerIcon={ListFilter}
-          items={FILTER_OPTIONS.map((opt) => ({
-            label: opt.label,
-            onClick: () => handleFilterClick(opt.value),
-          }))}
+          items={[
+            ...FILTER_OPTIONS.map((opt) => ({
+              label: opt.label,
+              onClick: () => onFilter(opt.value),
+            })),
+            {
+              label: "Clear Filter",
+              onClick: onReset,
+              separator: true,
+            },
+          ]}
         />
 
         <AppDropdown
           triggerIcon={ArrowDownUp}
-          items={SORT_OPTIONS.map((opt) => ({
-            label: opt.label,
-            onClick: () => handleSortClick(opt.value),
-            separator: opt.separator,
-          }))}
+          items={[
+            ...SORT_OPTIONS.map((opt) => ({
+              label: opt.label,
+              onClick: () => onSort(opt.value),
+              separator: opt.separator,
+            })),
+            {
+              label: "Clear Sort",
+              onClick: onReset,
+              separator: true,
+            },
+          ]}
         />
       </div>
+
       <Input
         className="w-64"
         placeholder="Search flags by name"
