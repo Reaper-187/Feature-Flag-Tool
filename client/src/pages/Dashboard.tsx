@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { useFetchFlags } from "@/hooks/flagHooks/use.fetchFlag";
-import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
-import { DashboardFilters } from "@/components/dashboard/DashboardFilters";
-import { EnvironmentIndicators } from "@/components/dashboard/EnvironmentIndicators";
-import { FlagList } from "@/components/dashboard/FlagList";
+import { DashboardHeader } from "@/components/dashboard-comp/DashboardHeader";
+import { DashboardFilters } from "@/components/dashboard-comp/DashboardFilters";
+import { EnvironmentIndicators } from "@/components/dashboard-comp/EnvironmentIndicators";
+import { FlagList } from "@/components/dashboard-comp/FlagList";
 import { useFlagManagement } from "@/hooks/flagHooks/useFlagManagement";
 import { useFlagFilters } from "@/hooks/flagHooks/useFlagFilters";
 

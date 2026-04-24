@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Register } from "./auth-pages/Register";
 import { Login } from "./auth-pages/Login";
 import BgImg from "@/assets/ff-bg.png";
-import "./flip.css";
+import "@/CSS/flip.css";
 
 export const AuthPage = () => {
   const [mode, setMode] = useState<"login" | "register">("login");
