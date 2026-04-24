@@ -1,9 +1,5 @@
-import { LogOut } from "lucide-react";
-
 import {
   DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -11,9 +7,13 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { LogoutButton } from "../Logout/LogoutButton";
 
-export const SidebarSwitcher = () => {
+interface UserInfoProps {
+  userName: string;
+  role: "ADMIN" | "DEV" | "GUEST";
+}
+
+export const SidebarSwitcher = ({ userName, role }: UserInfoProps) => {
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -24,20 +24,14 @@ export const SidebarSwitcher = () => {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                <p>PB</p>
+                <p>{userName.slice(0, 2).toUpperCase()}</p>
               </div>
-              {/* <div className="flex gap-2 leading-none border-b-2 border-b-indigo-500">
-                <span className="font-medium">{user?.firstName}</span>
-                <span className="font-medium">{user?.lastName}</span>
-              </div> */}
-              <LogOut className="ml-auto" />
+              <div className="flex gap-2 leading-none border-b-2 border-b-indigo-500">
+                <span className="font-medium">User: {userName}</span>
+                <span className="font-medium">Role: {role}</span>
+              </div>
             </SidebarMenuButton>
           </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem>
-              <LogoutButton />
-            </DropdownMenuItem>
-          </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
     </SidebarMenu>

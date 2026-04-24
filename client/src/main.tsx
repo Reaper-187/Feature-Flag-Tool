@@ -18,27 +18,9 @@ import { EmailVerificationPage } from "./pages/auth-pages/EmailVerificationPage.
 import { EmailConfirmPage } from "./pages/auth-pages/EmailConfirmPage.tsx";
 import { NewPwPage } from "./pages/auth-pages/NewPwPage.tsx";
 import { ForgotPw } from "./pages/auth-pages/ForgotPw.tsx";
+import { Settings } from "./pages/Settings.tsx";
 
 const queryClient = new QueryClient();
-
-// {
-//   path: "/reset-password-authentication",
-//   element: (
-//     <>
-//       <PublicRoute>
-//         <ForgotPw />
-//       </PublicRoute>
-//     </>
-//   ),
-// },
-// {
-//   path: "/verifyUser",
-//   element: (
-//     <VerificationRoute>
-//       <Verification />
-//     </VerificationRoute>
-//   ),
-// },
 const router = createBrowserRouter([
   {
     path: "/verify-email",
@@ -94,6 +76,7 @@ const router = createBrowserRouter([
       { path: "dashboard", element: <Dashboard /> },
       { path: "create-new-feature-flag", element: <NewFlag /> },
       { path: "flags/:flagId/edit", element: <NewFlag /> },
+      { path: "generall/settings", element: <Settings /> },
     ],
   },
 ]);
