@@ -5,6 +5,7 @@ interface FlagInfo {
   flagId: string;
   flagName: string;
   createdBy: string;
+  flagRollout: number;
   createdDate: number;
   openEditFrom: (flagId: string) => void;
   handleDelete: (flagId: string) => void;
@@ -15,14 +16,18 @@ export const FlagInfoComp = ({
   flagName,
   createdBy,
   createdDate,
+  flagRollout,
   openEditFrom,
   handleDelete,
 }: FlagInfo) => {
   return (
     <div key={flagId}>
       <h3 className="font-bold">{flagName}</h3>
-      <div className="grid grid-cols-[120px_100px_80px_auto] gap-3 items-center text-xs text-gray-400">
+      <div className="grid grid-cols-[100px_120px_80px_auto] gap-3 items-center text-xs text-gray-400">
         <p className="truncate">user: {createdBy}</p>
+        <p className="">
+          User-Rollout: <span className="mx-2 font-bold">{flagRollout}%</span>
+        </p>
         <p>
           {new Date(createdDate).toLocaleDateString("de-DE", {
             day: "2-digit",

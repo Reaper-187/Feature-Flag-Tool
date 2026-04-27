@@ -47,6 +47,7 @@ export const Flag = ({
               flagName={data.flagName}
               createdBy={data.createdBy}
               createdDate={data.createdDate}
+              flagRollout={data.flagRollout}
               openEditFrom={openEdit}
               handleDelete={deleteFlag}
             />
