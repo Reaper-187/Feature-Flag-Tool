@@ -14,9 +14,10 @@ import { useAuth } from "@/hooks/authHooks/use.auth";
 import { LogoutButton } from "../Logout/LogoutButton";
 import { Separator } from "../ui/separator";
 import { Link } from "react-router-dom";
+import { Skeleton } from "../ui/skeleton";
 
 export function AppSidebar() {
-  const { data } = useAuth();
+  const { data, isLoading } = useAuth();
 
   if (!data?.name && !data?.role) {
     return null;
@@ -30,11 +31,22 @@ export function AppSidebar() {
   return (
     <Sidebar>
       <SidebarHeader>
-        <SidebarSwitcher userName={data?.name} role={data?.role} />
+        <SidebarSwitcher
+          userName={data?.name}
+          role={data?.role}
+          isLoading={isLoading}
+        />
 
-        <p className="flex self-center text-sm gap-2">
-          <span className="font-semibold">email:</span> {data.email}
-        </p>
+        {isLoading ? (
+          <div className="flex self-center text-sm gap-2">
+            <Skeleton className="h-4 w-12" />
+            <Skeleton className="h-4 w-32" />
+          </div>
+        ) : (
+          <p className="flex self-center text-sm gap-2">
+            <span className="font-semibold">email:</span> {data?.email}
+          </p>
+        )}
       </SidebarHeader>
       <Separator />
       <SidebarContent>
@@ -42,21 +54,33 @@ export function AppSidebar() {
           <SidebarGroupLabel>Generall</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {menuItems.map((item) => (
-                <SidebarMenuItem key={item.path}>
-                  <Link to={item.path}>
-                    <SidebarMenuButton
-                      className={`
-                        flex justify-start items-center gap-3 px-4 py-2.5 m-1 w-full 
-                        rounded-md border-2 border-transparent 
-                        hover:border-primary hover:bg-accent hover:text-accent-foreground
-                        transition-all duration-200 ease-in-out`}
-                    >
-                      {item.label}
-                    </SidebarMenuButton>
-                  </Link>
-                </SidebarMenuItem>
-              ))}
+              {isLoading ? (
+                <>
+                  {[1, 2].map((i) => (
+                    <SidebarMenuItem key={i}>
+                      <div className="flex justify-start items-center gap-3 px-4 py-2.5 m-1 w-full">
+                        <Skeleton className="h-5 w-24" />
+                      </div>
+                    </SidebarMenuItem>
+                  ))}
+                </>
+              ) : (
+                menuItems.map((item) => (
+                  <SidebarMenuItem key={item.path}>
+                    <Link to={item.path}>
+                      <SidebarMenuButton
+                        className={`
+                          flex justify-start items-center gap-3 px-4 py-2.5 m-1 w-full 
+                          rounded-md border-2 border-transparent 
+                          hover:border-primary hover:bg-accent hover:text-accent-foreground
+                          transition-all duration-200 ease-in-out`}
+                      >
+                        {item.label}
+                      </SidebarMenuButton>
+                    </Link>
+                  </SidebarMenuItem>
+                ))
+              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

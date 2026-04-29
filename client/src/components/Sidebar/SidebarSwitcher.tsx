@@ -7,13 +7,35 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { Skeleton } from "../ui/skeleton";
 
 interface UserInfoProps {
   userName: string;
   role: "ADMIN" | "DEV" | "GUEST";
+  isLoading: boolean;
 }
 
-export const SidebarSwitcher = ({ userName, role }: UserInfoProps) => {
+export const SidebarSwitcher = ({
+  userName,
+  role,
+  isLoading,
+}: UserInfoProps) => {
+  if (isLoading) {
+    return (
+      <SidebarMenu>
+        <SidebarMenuItem>
+          <SidebarMenuButton size="lg">
+            <Skeleton className="flex aspect-square size-8 items-center justify-center rounded-lg" />
+            <div className="flex gap-2 leading-none">
+              <Skeleton className="h-5 w-24" />
+              <Skeleton className="h-5 w-20" />
+            </div>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      </SidebarMenu>
+    );
+  }
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>

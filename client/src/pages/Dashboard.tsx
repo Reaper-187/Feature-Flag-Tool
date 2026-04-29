@@ -26,7 +26,6 @@ export const Dashboard = () => {
     resetFilters,
   } = useFlagFilters(editableFlags);
 
-  if (isLoading) return <div>Loading flags...</div>;
   if (error) return <div>Error loading flags: {error.message}</div>;
 
   return (
@@ -44,6 +43,7 @@ export const Dashboard = () => {
       </div>
 
       <FlagList
+        isLoading={isLoading}
         flags={filteredFlags}
         onToggleSwitch={handleToggleSwitch}
         onEdit={handleEdit}
