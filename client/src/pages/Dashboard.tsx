@@ -32,7 +32,7 @@ export const Dashboard = () => {
     <>
       <DashboardHeader />
 
-      <div className="flex justify-between px-3">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center px-3 gap-3">
         <DashboardFilters
           onSearch={handleSearch}
           onFilter={handleFilter}

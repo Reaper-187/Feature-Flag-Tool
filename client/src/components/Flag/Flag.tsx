@@ -40,59 +40,56 @@ export const Flag = ({
   return (
     <>
       <div>
-        <div>
-          <div className="flex justify-between p-3">
-            <FlagInfoComp
-              flagId={data.flagId}
-              flagName={data.flagName}
-              createdBy={data.createdBy}
-              createdDate={data.createdDate}
-              flagRollout={data.flagRollout}
-              openEditFrom={openEdit}
-              handleDelete={deleteFlag}
-            />
-            <div className="flex gap-2 w-1/2 ">
-              <div className="w-full flex items-center p-1 text-sm justify-between">
-                <p
-                  className={`${getStatusStyle(data.devSwitch)} font-medium text-sm`}
-                >
-                  {data.devSwitch ? "active" : "inactive"}
-                </p>
-                <Switch
-                  checked={data.devSwitch}
-                  onCheckedChange={() => switchToggle(data.flagId, "devSwitch")}
-                />
-              </div>
-              <div className="w-full flex items-center p-1 text-sm justify-between">
-                <p
-                  className={`${getStatusStyle(data.stageSwitch)} font-medium text-sm`}
-                >
-                  {data.stageSwitch ? "active" : "inactive"}
-                </p>
-                <Switch
-                  checked={data.stageSwitch}
-                  onCheckedChange={() =>
-                    switchToggle(data.flagId, "stageSwitch")
-                  }
-                />
-              </div>
-              <div className="w-full flex items-center p-1 text-sm justify-between">
-                <p
-                  className={`${getStatusStyle(data.prodSwitch)} font-medium text-sm`}
-                >
-                  {data.prodSwitch ? "active" : "inactive"}
-                </p>
-                <Switch
-                  checked={data.prodSwitch}
-                  onCheckedChange={() =>
-                    switchToggle(data.flagId, "prodSwitch")
-                  }
-                />
-              </div>
+        <div className="flex flex-col md:flex-row md:justify-between p-3 gap-3">
+          <FlagInfoComp
+            flagId={data.flagId}
+            flagName={data.flagName}
+            createdBy={data.createdBy}
+            createdDate={data.createdDate}
+            flagRollout={data.flagRollout}
+            openEditFrom={openEdit}
+            handleDelete={deleteFlag}
+          />
+
+          <div className="flex gap-2 md:w-1/2">
+            <div className="w-full flex items-center p-1 text-sm justify-between">
+              <p
+                className={`${getStatusStyle(data.devSwitch)} font-medium text-sm`}
+              >
+                {data.devSwitch ? "active" : "inactive"}
+              </p>
+              <Switch
+                checked={data.devSwitch}
+                onCheckedChange={() => switchToggle(data.flagId, "devSwitch")}
+              />
+            </div>
+
+            <div className="w-full flex items-center p-1 text-sm justify-between">
+              <p
+                className={`${getStatusStyle(data.stageSwitch)} font-medium text-sm`}
+              >
+                {data.stageSwitch ? "active" : "inactive"}
+              </p>
+              <Switch
+                checked={data.stageSwitch}
+                onCheckedChange={() => switchToggle(data.flagId, "stageSwitch")}
+              />
+            </div>
+
+            <div className="w-full flex items-center p-1 text-sm justify-between">
+              <p
+                className={`${getStatusStyle(data.prodSwitch)} font-medium text-sm`}
+              >
+                {data.prodSwitch ? "active" : "inactive"}
+              </p>
+              <Switch
+                checked={data.prodSwitch}
+                onCheckedChange={() => switchToggle(data.flagId, "prodSwitch")}
+              />
             </div>
           </div>
-          <Separator />
         </div>
+        <Separator />
       </div>
     </>
   );

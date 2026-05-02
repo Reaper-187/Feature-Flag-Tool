@@ -21,7 +21,7 @@ export const FlagInfoComp = ({
   handleDelete,
 }: FlagInfo) => {
   return (
-    <div key={flagId}>
+    <div key={flagId} className="flex items-center gap-3">
       <h3 className="font-bold">{flagName}</h3>
       <div className="grid grid-cols-[100px_120px_80px_auto] gap-3 items-center text-xs text-gray-400">
         <p className="truncate">user: {createdBy}</p>

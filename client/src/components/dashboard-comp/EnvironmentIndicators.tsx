@@ -6,16 +6,14 @@ export const EnvironmentIndicators = () => {
   ];
 
   return (
-    <div className="flex gap-2 w-1/2">
+    <div className="flex gap-2 w-full md:w-1/2 md:ml-auto">
       {environments.map((env) => (
         <div
           key={env.name}
-          className="bg-gray-200 w-full flex items-center py-1 px-3 rounded-md gap-3"
+          className="bg-gray-200 flex-1 flex items-center py-1 px-3 rounded-md gap-2"
         >
-          <span
-            className={`w-[15px] h-[15px] ${env.color} rounded-full`}
-          ></span>
-          <p>{env.name}</p>
+          <span className={`w-3 h-3 shrink-0 ${env.color} rounded-full`} />
+          <p className="text-sm truncate">{env.name}</p>
         </div>
       ))}
     </div>
