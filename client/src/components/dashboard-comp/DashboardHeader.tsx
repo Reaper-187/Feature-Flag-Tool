@@ -1,4 +1,4 @@
-import { CreateFlag } from "../Button/createFlag";
+import { CreateFlag } from "../Button/CreateFlag";
 
 export const DashboardHeader = () => {
   return (

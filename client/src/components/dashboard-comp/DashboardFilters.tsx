@@ -2,7 +2,7 @@ import { AppDropdown } from "@/components/DropdownComp/Dropdown";
 import { Input } from "@/components/ui/input";
 import { ArrowDownUp, ListFilter } from "lucide-react";
 import { FILTER_OPTIONS, SORT_OPTIONS } from "@/constants/flagConstants";
-import { CreateFlag } from "../Button/createFlag";
+import { CreateFlag } from "../Button/CreateFlag";
 
 interface DashboardFiltersProps {
   onSearch: (term: string) => void;
